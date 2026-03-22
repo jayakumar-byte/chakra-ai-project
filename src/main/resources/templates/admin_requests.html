@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Requests Review - Chakra Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        body { background: #0f172a; color: white; font-family: 'Segoe UI', sans-serif; }
+        .request-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-left: 5px solid #ffc107;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: 0.3s;
+        }
+        .request-card:hover { background: rgba(255, 255, 255, 0.08); }
+        .detail-label { color: #94a3b8; font-size: 0.85rem; text-transform: uppercase; }
+        .detail-value { font-weight: 600; color: #f8fafc; }
+        .alert-custom {
+            background: #10b981;
+            color: white;
+            border: none;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-dark bg-dark border-bottom border-secondary mb-4">
+    <div class="container-fluid px-4">
+        <a class="navbar-brand fw-bold" th:href="@{/api/chakra/admin/dashboard}">
+            <i class="fas fa-arrow-left me-2 text-warning"></i> BACK TO DASHBOARD
+        </a>
+        <span class="navbar-text text-warning fw-bold">
+            <i class="fas fa-gavel me-2"></i> PENDING USER REQUESTS
+        </span>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+
+            <div th:if="${success}" class="alert alert-custom alert-dismissible fade show mb-4" role="alert">
+                <i class="fas fa-check-circle me-2"></i>
+                <strong th:text="${success}">Success Message!</strong>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4>Reviewing
+                    <span class="text-warning"
+                          th:text="${reportedAnomalies != null ? #lists.size(reportedAnomalies) : 0}">0</span>
+                    Reported Threats
+                </h4>
+                <span class="badge bg-secondary">System Status: Ethical Review Active</span>
+            </div>
+
+            <div th:if="${reportedAnomalies != null}">
+                <div th:each="report : ${reportedAnomalies}" class="request-card shadow-lg">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <div class="row g-3">
+                                <div class="col-6">
+                                    <div class="detail-label">Suspect Account</div>
+                                    <div class="detail-value text-danger">
+                                        <i class="fas fa-user-ninja me-2"></i>
+                                        <span th:text="${report.attemptedBy}">hacker@mail.com</span>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="detail-label">Target File</div>
+                                    <div class="detail-value">
+                                        <i class="fas fa-file-code me-2"></i>
+                                        <span th:text="${report.filename}">document.pdf</span>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="detail-label">Reported By (Owner)</div>
+                                    <div class="detail-value text-info">
+                                        <i class="fas fa-user-shield me-2"></i>
+                                        <span th:text="${report.ownerEmail}">owner@mail.com</span>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="detail-label">Attempt Time</div>
+                                    <div class="detail-value small" th:text="${#temporals.format(report.timestamp, 'dd MMM yyyy, HH:mm')}">Time</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 text-end">
+                            <div class="d-grid gap-2">
+                                <form th:action="@{/api/chakra/admin/user/block-by-email}" method="post">
+                                    <input type="hidden" name="email" th:value="${report.attemptedBy}" />
+                                    <button type="submit" class="btn btn-danger btn-sm w-100 mb-2 shadow-sm">
+                                        <i class="fas fa-ban me-2"></i> PERMANENT BLOCK
+                                    </button>
+                                </form>
+
+                                <form th:action="@{'/api/chakra/admin/request/dismiss/' + ${report.id}}" method="POST">
+                                    <button type="submit" class="btn btn-outline-light btn-sm w-100 opacity-50">
+                                        <i class="fas fa-times me-2"></i> Dismiss Report
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div th:if="${reportedAnomalies == null or #lists.isEmpty(reportedAnomalies)}" class="text-center py-5 opacity-50">
+                <i class="fas fa-clipboard-check fa-4x mb-3"></i>
+                <h5>No pending requests, Macha! System is clean.</h5>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

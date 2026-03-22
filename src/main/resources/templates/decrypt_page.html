@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Chakra AI - Decrypt Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        body { background: #0f172a; min-height: 100vh; display: flex; align-items: center; justify-content: center; font-family: 'Segoe UI', sans-serif; color: white; }
+        .upload-box {
+            background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px;
+            padding: 40px; width: 100%; max-width: 500px; text-align: center;
+        }
+        .drop-zone {
+            border: 2px dashed rgba(99, 102, 241, 0.5); padding: 40px;
+            border-radius: 15px; margin-bottom: 20px; cursor: pointer; transition: 0.3s;
+            background: rgba(0,0,0,0.2);
+        }
+        .drop-zone:hover { background: rgba(99, 102, 241, 0.1); border-color: #6366f1; }
+        .glow-text { text-shadow: 0 0 15px rgba(99, 102, 241, 0.6); }
+        .form-control { background: rgba(0,0,0,0.3) !important; border: 1px solid rgba(255,255,255,0.1) !important; color: white !important; }
+        .btn-primary { background: linear-gradient(45deg, #4f46e5, #7c3aed); border: none; }
+    </style>
+</head>
+<body>
+
+<div class="container d-flex justify-content-center">
+
+    <div th:if="${verificationSuccess == null}" class="upload-box animate__animated animate__fadeIn">
+        <i class="fas fa-file-export fa-3x text-info mb-3 glow-text"></i>
+        <h3 class="fw-bold mb-3">Unlock Your Data</h3>
+        <p class="text-muted small mb-4">Upload the encrypted file to verify its identity within the Chakra engine.</p>
+
+        <div th:if="${error}" class="alert alert-danger bg-transparent border-danger text-danger small" th:text="${error}"></div>
+
+        <form th:action="@{/api/chakra/decrypt-upload}" method="POST" enctype="multipart/form-data" id="uploadForm">
+            <div class="drop-zone" onclick="document.getElementById('fileInput').click()">
+                <i class="fas fa-cloud-upload-alt text-muted mb-2 fa-2x"></i>
+                <p class="mb-0 small">Click or drag your encrypted file here</p>
+                <input type="file" name="file" id="fileInput" hidden required onchange="document.getElementById('uploadForm').submit()">
+            </div>
+            <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">
+                <i class="fas fa-magnifying-glass me-2"></i> Verify File Hash
+            </button>
+        </form>
+
+        <a th:href="@{/api/chakra/dashboard}" class="btn btn-link mt-3 text-decoration-none text-muted small">
+            <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+        </a>
+    </div>
+
+    <div th:if="${verificationSuccess}" class="upload-box animate__animated animate__zoomIn">
+        <i class="fas fa-key fa-3x text-warning mb-3 glow-text"></i>
+        <h3 class="fw-bold mb-1">Verify Credentials</h3>
+        <p class="text-muted small mb-4">File: <span class="text-info fw-bold" th:text="${fileName}"></span></p>
+
+        <form th:action="@{'/api/chakra/decrypt/' + ${fileId}}" method="POST" onsubmit="submitDecryption(event)">
+            <div class="mb-3 text-start">
+                <label class="form-label small fw-bold opacity-70">Radius Parameter (R)</label>
+                <input type="number" step="0.01" name="radius" class="form-control py-2" placeholder="Enter original R" required>
+            </div>
+            <div class="mb-4 text-start">
+                <label class="form-label small fw-bold opacity-70">Angular Shift (θ)</label>
+                <input type="number" name="theta" class="form-control py-2" placeholder="Enter original angle" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">
+                <i class="fas fa-unlock-keyhole me-2"></i> Decrypt & Download
+            </button>
+        </form>
+
+        <a th:href="@{/api/chakra/decrypt-hub}" class="btn btn-link mt-3 text-decoration-none text-muted small">
+            <i class="fas fa-redo me-1"></i> Verify a different file
+        </a>
+    </div>
+
+</div>
+
+<script>
+    async function submitDecryption(event) {
+        event.preventDefault();
+
+        const form = event.target;
+        const formData = new FormData(form);
+
+        Swal.fire({
+            title: 'Verifying Secure Keys...',
+            allowOutsideClick: false,
+            didOpen: () => { Swal.showLoading(); }
+        });
+
+        try {
+            const response = await fetch(form.action, {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.ok) {
+                // ✅ SUCCESS
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                // Fetching original file name if possible, else default
+                a.download = "decrypted_file";
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: 'Key matched! File decrypted successfully.',
+                    confirmButtonColor: '#4f46e5'
+                });
+            } else {
+                // 🚨 ERROR (JSON Handling)
+                const data = await response.json();
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Decryption Failed',
+                    text: data.error,
+                    confirmButtonText: 'Try Again',
+                    confirmButtonColor: '#dc3545'
+                });
+            }
+        } catch (err) {
+            Swal.fire('System Error', 'Could not connect to the security engine.', 'error');
+        }
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Chakra Encryption - Login</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0f172a; /* Dashboard dark theme-oda match aaga */
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+        }
+        .login-container {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 40px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            width: 350px;
+            text-align: center;
+            color: white;
+        }
+        h2 { color: #38bdf8; margin-bottom: 25px; font-weight: bold; }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 5px;
+            box-sizing: border-box;
+            background: rgba(0,0,0,0.2);
+            color: white;
+        }
+        input::placeholder { color: rgba(255,255,255,0.4); }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #38bdf8;
+            color: #0f172a;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        button:hover { background: #0ea5e9; transform: translateY(-2px); }
+
+        /* Message Styling */
+        .error-msg {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ef4444;
+            margin-bottom: 15px;
+            font-size: 13px;
+            font-weight:600;
+        }
+        .success-msg {
+            background: rgba(34, 197, 94, 0.15);
+            color: #22c55e;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #22c55e;
+            margin-bottom: 15px;
+            font-size: 13px;
+        }
+
+        a { display: block; margin-top: 15px; color: #38bdf8; text-decoration: none; font-size: 14px; transition: 0.3s; }
+        a:hover { text-decoration: underline; opacity: 0.8; }
+    </style>
+</head>
+<body>
+
+<div class="login-container">
+    <h2>Chakra Login</h2>
+
+    <div th:if="${loginError}" class="error-msg" th:text="${loginError}"></div>
+
+    <div th:if="${param.logout}" class="success-msg">You have been logged out.</div>
+    <div th:if="${param.success}" class="success-msg">Registration Successful! Please Login.</div>
+
+    <form th:action="@{/login}" method="post">
+        <input type="email" name="username" placeholder="Email Address" required>
+        <input type="password" name="password" placeholder="Password" required>
+        <button type="submit">Login</button>
+    </form>
+
+    <a th:href="@{/register}">Don't have an account? Register here</a>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Command Center - Chakra AI</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <style>
+        body { background: #0f172a; color: white; font-family: 'Segoe UI', sans-serif; overflow-x: hidden; }
+
+        /* Stat Card & Hover Effects */
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px; padding: 25px; transition: 0.3s; height: 100%;
+        }
+        .stat-card:hover { transform: translateY(-5px); background: rgba(255, 255, 255, 0.08); border-color: #6366f1; }
+
+        .icon-circle {
+            width: 60px; height: 60px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        /* Audit Table Styling */
+        .table-container { background: rgba(255, 255, 255, 0.03); border-radius: 15px; padding: 20px; }
+        .table-responsive-scroll {
+            max-height: 450px; overflow-y: auto; scrollbar-width: thin;
+            scrollbar-color: #6366f1 rgba(255,255,255,0.05);
+        }
+        .table-responsive-scroll::-webkit-scrollbar { width: 6px; }
+        .table-responsive-scroll::-webkit-scrollbar-thumb { background: #6366f1; border-radius: 10px; }
+        .sticky-header { position: sticky; top: 0; background: #1e293b; z-index: 10; }
+
+        /* Row Highlighting Logic */
+        .row-reported { border-left: 5px solid #0ea5e9 !important; background: rgba(14, 165, 233, 0.05) !important; }
+        .row-red { border-left: 5px solid #ef4444 !important; background: rgba(239, 68, 68, 0.05) !important; }
+        .row-yellow { border-left: 5px solid #f59e0b !important; background: rgba(245, 158, 11, 0.05) !important; }
+        /* Dismissed Row Style */
+        .row-dismissed { border-left: 5px solid #64748b !important; opacity: 0.8; background: rgba(100, 116, 139, 0.05) !important; }
+
+        /* Status Badges */
+        .badge-reported { background: #0ea5e9; color: white; padding: 5px 10px; border-radius: 6px; font-weight: bold; font-size: 0.7rem; }
+        .badge-wrongkey { background: #f59e0b; color: black; padding: 5px 10px; border-radius: 6px; font-weight: bold; font-size: 0.7rem; }
+        .badge-unauthorized { background: #ef4444; color: white; padding: 5px 10px; border-radius: 6px; font-weight: bold; font-size: 0.7rem; }
+        .badge-dismissed { background: transparent; border: 1px solid #94a3b8; color: #94a3b8; padding: 5px 10px; border-radius: 6px; font-weight: bold; font-size: 0.7rem; }
+
+        /* Report Card Styling */
+        .request-card { border: 1px solid rgba(255, 193, 7, 0.4) !important; background: rgba(255, 193, 7, 0.08) !important; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-dark bg-dark border-bottom border-secondary mb-4 shadow-sm">
+    <div class="container-fluid px-4">
+        <a class="navbar-brand fw-bold d-flex align-items-center" href="#">
+            <i class="fa-solid fa-shield-halved me-3 text-info"></i>
+            <span>CHAKRA ADMIN | MONITOR</span>
+        </a>
+        <a th:href="@{/logout}" class="btn btn-outline-danger btn-sm px-4 rounded-pill">Logout</a>
+    </div>
+</nav>
+
+<div class="container-fluid px-4">
+    <div class="row g-4 mb-5">
+        <div class="col-md-3">
+            <div class="stat-card d-flex align-items-center">
+                <div class="icon-circle bg-primary bg-opacity-25 me-3">
+                    <i class="fa-solid fa-users fa-2x text-primary"></i>
+                </div>
+                <div>
+                    <h3 class="mb-0 fw-bold" th:text="${userCount}">0</h3>
+                    <p class="text-muted mb-0 small text-uppercase">Registered Users</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="stat-card d-flex align-items-center">
+                <div class="icon-circle bg-info bg-opacity-25 me-3">
+                    <i class="fa-solid fa-file-shield fa-2x text-info"></i>
+                </div>
+                <div>
+                    <h3 class="mb-0 fw-bold" th:text="${fileCount}">0</h3>
+                    <p class="text-muted mb-0 small text-uppercase">Vault Files</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="stat-card d-flex align-items-center">
+                <div class="icon-circle bg-danger bg-opacity-25 me-3">
+                    <i class="fa-solid fa-biohazard fa-2x text-danger"></i>
+                </div>
+                <div>
+                    <h3 class="mb-0 fw-bold text-danger" th:text="${detectedCount}">0</h3>
+                    <p class="text-muted mb-0 small text-uppercase">Total Threats Logged</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <a th:href="@{/api/chakra/admin/requests}" class="text-decoration-none h-100 d-block">
+                <div class="stat-card d-flex align-items-center request-card">
+                    <div class="icon-circle bg-warning bg-opacity-25 me-3">
+                        <i class="fa-solid fa-envelope-open-text fa-2x text-warning"></i>
+                    </div>
+                    <div>
+                        <h3 class="mb-0 fw-bold text-warning"
+                            th:text="${anomalies.?[reported == true && dismissedInReport == false].size()}">0</h3>
+                        <p class="text-muted mb-0 small text-uppercase">Active User Reports <i class="fa-solid fa-arrow-right ms-1"></i></p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <div class="table-container shadow h-100">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h5 class="text-warning fw-bold mb-0"><i class="fa-solid fa-terminal me-2"></i> Global Security Audit</h5>
+                    <span class="badge bg-secondary" th:text="${#lists.size(anomalies)} + ' Logs Total'"></span>
+                </div>
+                <div class="table-responsive-scroll">
+                    <table class="table table-dark table-hover align-middle mb-0">
+                        <thead class="text-muted small sticky-header">
+                        <tr>
+                            <th class="py-3">Time</th>
+                            <th>Target File</th>
+                            <th>Suspect</th>
+                            <th>Security Status</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="a : ${anomalies}"
+                            th:classappend="${a.dismissedInReport} ? 'row-dismissed' : (${a.reported} ? 'row-reported' : (${a.redAlert} ? 'row-red' : 'row-yellow'))">
+                            <td class="small opacity-75" th:text="${#temporals.format(a.timestamp, 'dd-MM HH:mm')}"></td>
+                            <td th:text="${a.filename}" class="fw-bold text-info"></td>
+                            <td th:text="${a.attemptedBy}" class="small"></td>
+                            <td>
+                                <span th:if="${a.dismissedInReport}" class="badge-dismissed">
+                                    <i class="fa-solid fa-box-archive me-1"></i> ARCHIVED
+                                </span>
+
+                                <div th:unless="${a.dismissedInReport}">
+                                    <span th:if="${a.reported}" class="badge-reported">USER REPORTED</span>
+                                    <span th:if="${!a.reported && a.redAlert}" class="badge-unauthorized">UNAUTHORIZED</span>
+                                    <span th:if="${!a.reported && a.yellowAlert}" class="badge-wrongkey">WRONG KEY</span>
+                                    <span th:if="${!a.reported && !a.redAlert && !a.yellowAlert}" class="badge bg-secondary small">DETECTED</span>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-5">
+            <div class="table-container shadow h-100">
+                <h5 class="mb-4 text-primary fw-bold"><i class="fa-solid fa-user-gear me-2"></i> User Authority</h5>
+                <div th:each="u : ${users}" class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom border-secondary border-opacity-25">
+                    <div class="d-flex align-items-center">
+                        <div class="icon-circle bg-opacity-10 me-3 shadow-sm"
+                             th:classappend="${u.enabled ? 'bg-success' : 'bg-danger'}" style="width:45px; height:45px;">
+                            <i class="fa-solid fa-sm" th:classappend="${u.enabled ? 'fa-user-check text-success' : 'fa-user-slash text-danger'}"></i>
+                        </div>
+                        <div>
+                            <div class="fw-bold small d-flex align-items-center">
+                                <span th:text="${u.name}">User</span>
+                                <span th:if="${!u.enabled}" class="badge bg-danger ms-2" style="font-size:0.6rem;">BLOCKED</span>
+                            </div>
+                            <div class="text-muted" style="font-size: 11px;" th:text="${u.email}">Email</div>
+                        </div>
+                    </div>
+                    <form th:action="@{'/api/chakra/admin/user/toggle-block/' + ${u.id}}" method="POST">
+                        <button type="submit" class="btn btn-sm rounded-pill px-3 shadow-sm"
+                                th:classappend="${u.enabled ? 'btn-outline-danger' : 'btn-success'}">
+                            <span th:text="${u.enabled ? 'Disable' : 'Enable'}"></span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:fragment="permissionTable">
+    <table class="table table-sm">
+        <thead>
+        <tr>
+            <th>User Email</th>
+            <th>Granted By</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="p : ${permissions}">
+            <td th:text="${p.allowedUser.email}"></td>
+            <td th:text="${p.grantedBy.name}"></td> <td>
+            <form th:action="@{'/api/chakra/revoke-permission/' + ${p.id}}" method="POST">
+                <button type="submit" class="btn btn-danger btn-sm">Revoke</button>
+            </form>
+        </td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(permissions)}">
+            <td colspan="3">No one has access yet.</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
