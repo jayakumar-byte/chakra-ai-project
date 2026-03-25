@@ -7,56 +7,137 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
-        body { background: #0f172a; min-height: 100vh; font-family: 'Segoe UI', sans-serif; color: white; display: flex; align-items: center; padding: 40px 0; }
-        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 24px; padding: 40px; }
-        .left-section { border-right: 1px solid rgba(255, 255, 255, 0.1); padding-right: 40px; }
-        .preview-side { padding-left: 40px; }
+        body {
+            background: #0f172a;
+            min-height: 100vh;
+            font-family: 'Segoe UI', sans-serif;
+            color: white;
+            display: flex;
+            align-items: center;
+            padding: 20px 0; /* Mobile-la top/bottom space kuraichuruken */
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 30px; /* Reduced for mobile */
+        }
 
-        .mode-btn { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); transition: 0.3s; padding: 25px; border-radius: 15px; cursor: pointer; text-align: center; }
+        /* Responsive Grid Logic */
+        .left-section {
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            padding-right: 30px;
+        }
+        .preview-side { padding-left: 30px; }
+
+        @media (max-width: 991.98px) {
+            .left-section {
+                border-right: none;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                padding-right: 0;
+                padding-bottom: 40px;
+                margin-bottom: 40px;
+            }
+            .preview-side { padding-left: 0; }
+        }
+
+        .mode-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: 0.3s;
+            padding: 20px;
+            border-radius: 15px;
+            cursor: pointer;
+            text-align: center;
+        }
         .mode-btn:hover { background: rgba(99, 102, 241, 0.2); border-color: #6366f1; transform: translateY(-5px); }
-        .mode-btn i { font-size: 2.5rem; margin-bottom: 10px; color: #6366f1; }
+        .mode-btn i { font-size: 2rem; margin-bottom: 10px; color: #6366f1; }
 
-        .preview-box { width: 100%; max-width: 400px; aspect-ratio: 1 / 1; background: rgba(0, 0, 0, 0.5); border: 2px dashed rgba(99, 102, 241, 0.3); border-radius: 20px; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; margin: 0 auto; }
+        .preview-box {
+            width: 100%;
+            max-width: 400px;
+            aspect-ratio: 1 / 1;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px dashed rgba(99, 102, 241, 0.3);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+            margin: 0 auto;
+        }
         #scrambledCanvas { width: 100%; height: 100%; display: none; object-fit: contain; image-rendering: pixelated; }
 
-        .encrypted-stream-box { background: #000; border-radius: 12px; padding: 15px; font-family: 'Courier New', monospace; font-size: 11px; color: #10b981; height: 300px; overflow-y: auto; word-break: break-all; text-align: left; border: 1px solid #1e293b; }
+        .encrypted-stream-box {
+            background: #000;
+            border-radius: 12px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 10px; /* Shrunk for mobile */
+            color: #10b981;
+            height: 250px;
+            overflow-y: auto;
+            word-break: break-all;
+            text-align: left;
+            border: 1px solid #1e293b;
+        }
 
         .glow-text { color: #fff; text-shadow: 0 0 15px rgba(99, 102, 241, 0.6); font-weight: 800; }
-        .form-control { background: rgba(0, 0, 0, 0.3) !important; border: 1px solid rgba(255, 255, 255, 0.1) !important; color: white !important; border-radius: 12px; }
-        .btn-encrypt { background: linear-gradient(45deg, #4f46e5, #7c3aed); border: none; color: white; padding: 14px; font-weight: bold; border-radius: 12px; transition: 0.3s; }
-        .btn-encrypt:hover { opacity: 0.9; transform: scale(1.02); }
+        .form-control {
+            background: rgba(0, 0, 0, 0.3) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            color: white !important;
+            border-radius: 12px;
+            font-size: 16px; /* Auto-zoom fix for mobile */
+        }
+
+        .btn-encrypt {
+            background: linear-gradient(45deg, #4f46e5, #7c3aed);
+            border: none;
+            color: white;
+            padding: 14px;
+            font-weight: bold;
+            border-radius: 12px;
+            transition: 0.3s;
+        }
 
         #mainFormArea, #loader, #successState { display: none; }
 
+        /* Animation */
         .scan-line { width: 100%; height: 3px; background: #6366f1; position: absolute; top: 0; left: 0; box-shadow: 0 0 15px #6366f1; animation: scan 2.5s linear infinite; }
         @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
     </style>
 </head>
 <body>
 
-<div class="container">
+<div class="container px-3">
     <div class="row justify-content-center">
         <div class="col-xl-10">
-            <a th:href="@{/api/chakra/dashboard}" class="btn btn-outline-light btn-sm mb-3 px-3">
-                <i class="fas fa-arrow-left me-2"></i> Dashboard
-            </a>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <a th:href="@{/api/chakra/dashboard}" class="btn btn-outline-light btn-sm px-3">
+                    <i class="fas fa-arrow-left me-2"></i> Dashboard
+                </a>
+                <span class="small text-info d-none d-sm-inline"><i class="fas fa-lock me-1"></i> AES-256 ACTIVE</span>
+            </div>
 
             <div class="glass-card shadow-lg">
                 <div class="row align-items-center">
                     <div class="col-lg-5 left-section">
-                        <h2 class="glow-text h3 mb-4"><i class="fas fa-microchip text-info me-2"></i> Chakra Engine</h2>
+                        <h2 class="glow-text h4 mb-4"><i class="fas fa-microchip text-info me-2"></i> Chakra Engine</h2>
 
                         <div id="modeSelection" th:if="${encryptionSuccess == null || !encryptionSuccess}">
                             <p class="small fw-bold text-muted mb-3">CHOOSE ENCRYPTION MODE</p>
-                            <div class="row g-3">
+                            <div class="row g-2">
                                 <div class="col-6">
                                     <div class="mode-btn" onclick="setMode('image')">
-                                        <i class="fas fa-images"></i><br><small>IMAGE SCRAMBLE</small>
+                                        <i class="fas fa-images"></i><br><small class="d-block mt-1">IMAGE</small>
                                     </div>
                                 </div>
                                 <div class="col-6">
                                     <div class="mode-btn" onclick="setMode('text')">
-                                        <i class="fas fa-file-code"></i><br><small>FILE ENCRYPT</small>
+                                        <i class="fas fa-file-code"></i><br><small class="d-block mt-1">FILE/TEXT</small>
                                     </div>
                                 </div>
                             </div>
@@ -65,72 +146,72 @@
                         <div id="mainFormArea">
                             <form id="encryptForm" th:action="@{/api/chakra/encrypt}" method="POST" enctype="multipart/form-data">
                                 <input type="hidden" name="mode" id="selectedMode">
-                                <div class="mb-4 mt-3">
-                                    <label class="small fw-bold text-info" id="fileLabel">UPLOAD FILE</label>
+                                <div class="mb-4 mt-2">
+                                    <label class="small fw-bold text-info mb-2" id="fileLabel">UPLOAD FILE</label>
                                     <input type="file" name="file" class="form-control" required>
                                 </div>
-                                <div class="row g-3 mb-4">
+                                <div class="row g-2 mb-4">
                                     <div class="col-6">
-                                        <label class="small fw-bold text-white">RADIUS</label>
+                                        <label class="small fw-bold text-white mb-1">RADIUS</label>
                                         <input type="number" step="0.01" name="radius" class="form-control" value="1.55" required>
                                     </div>
                                     <div class="col-6">
-                                        <label class="small fw-bold text-white">ANGLE</label>
+                                        <label class="small fw-bold text-white mb-1">ANGLE</label>
                                         <input type="number" name="theta" class="form-control" value="45" required>
                                     </div>
                                 </div>
                                 <button type="submit" class="btn btn-encrypt w-100" onclick="startProcessing()">
                                     <i class="fas fa-bolt me-2"></i> START ENCRYPTION
                                 </button>
-                                <button type="button" class="btn btn-link btn-sm text-muted w-100 mt-2" onclick="location.reload()">Reset Mode</button>
+                                <button type="button" class="btn btn-link btn-sm text-muted w-100 mt-2 text-decoration-none" onclick="location.reload()">Reset Mode</button>
                             </form>
                         </div>
 
-                        <div th:if="${encryptionSuccess}" class="text-start">
-                            <div class="alert alert-success bg-success bg-opacity-10 border-success text-success border-0 py-3">
+                        <div th:if="${encryptionSuccess}" class="text-center text-lg-start">
+                            <div class="alert alert-success bg-success bg-opacity-10 border-0 text-success py-3 small">
                                 <i class="fas fa-check-circle me-2"></i> Encryption Successful!
                             </div>
-                            <p class="small text-muted mb-1">Original Name:</p>
-                            <p class="fw-bold mb-4" th:text="${fileName}"></p>
+                            <p class="small text-muted mb-0">Original Name:</p>
+                            <p class="fw-bold text-truncate" th:text="${fileName}"></p>
 
-                            <a th:href="@{'/api/chakra/download-scrambled/' + ${newFileId}}" class="btn btn-success w-100 py-3 mb-3">
-                                <i class="fas fa-download me-2"></i> DOWNLOAD SCRAMBLED FILE
+                            <a th:href="@{'/api/chakra/download-scrambled/' + ${newFileId}}" class="btn btn-success w-100 py-3 mb-3 fw-bold">
+                                <i class="fas fa-download me-2"></i> DOWNLOAD SCRAMBLED
                             </a>
                             <a th:href="@{/api/chakra/encrypt-page}" class="btn btn-outline-info w-100 btn-sm">
-                                <i class="fas fa-redo me-2"></i> Encrypt Another File
+                                <i class="fas fa-redo me-2"></i> Encrypt Another
                             </a>
                         </div>
                     </div>
 
-                    <div class="col-lg-7 preview-side text-center">
+                    <div class="col-lg-7 preview-side text-center mt-lg-0 mt-4">
                         <div id="readyState" th:if="${encryptionSuccess == null}">
-                            <div class="preview-box border-0"><i class="fas fa-shield-halved fa-6x opacity-10"></i></div>
-                            <p class="text-muted mt-3">Awaiting encryption parameters...</p>
+                            <div class="preview-box border-0"><i class="fas fa-shield-halved fa-5x opacity-10"></i></div>
+                            <p class="text-muted mt-3 small">Awaiting encryption parameters...</p>
                         </div>
 
                         <div id="loader">
                             <div class="preview-box">
                                 <div class="scan-line"></div>
-                                <i class="fas fa-atom fa-spin text-info fa-4x"></i>
+                                <i class="fas fa-atom fa-spin text-info fa-3x"></i>
                             </div>
-                            <h5 class="text-info mt-3">SCRAMBLING PIXELS...</h5>
+                            <h6 class="text-info mt-3">SCRAMBLING PIXELS...</h6>
                         </div>
 
                         <div id="successState" th:if="${encryptionSuccess}" style="display: block;">
-                            <div class="preview-box">
+                            <div class="preview-box shadow-sm">
                                 <div th:if="${isImage}" class="w-100 h-100">
                                     <canvas id="scrambledCanvas"></canvas>
-                                    <div id="renderingMsg" class="position-absolute top-50 start-50 translate-middle">
-                                        <i class="fas fa-spinner fa-spin me-2"></i> Generating Scramble...
+                                    <div id="renderingMsg" class="position-absolute top-50 start-50 translate-middle small">
+                                        <i class="fas fa-spinner fa-spin me-2"></i> Rendering Scramble...
                                     </div>
                                 </div>
 
-                                <div th:unless="${isImage}" class="p-3 w-100">
-                                    <p class="small text-info text-start mb-2"><i class="fas fa-terminal me-2"></i> Encrypted Data Stream:</p>
+                                <div th:unless="${isImage}" class="p-2 w-100">
+                                    <p class="small text-info text-start mb-2" style="font-size: 0.7rem;"><i class="fas fa-terminal me-2"></i> MACHINE-LEVEL OUTPUT:</p>
                                     <div class="encrypted-stream-box" th:text="${textPreview}"></div>
                                 </div>
                             </div>
-                            <p class="small text-muted mt-3">Preview of the encrypted machine-level output.</p>
+                            <p class="small text-muted mt-3 mb-0" style="font-size: 0.75rem;">Preview of the encrypted data stream.</p>
                         </div>
                     </div>
                 </div>
@@ -138,8 +219,6 @@
         </div>
     </div>
 </div>
-
-
 
 <script th:inline="javascript">
     const isSuccess = [[${encryptionSuccess != null ? encryptionSuccess : false}]];
@@ -166,10 +245,8 @@
             const renderMsg = document.getElementById('renderingMsg');
 
             try {
-                // Using canvas logic to show the encrypted preview image
                 const binaryString = atob(base64Data);
                 const len = binaryString.length;
-
                 canvas.width = 400;
                 canvas.height = 400;
                 const imgData = ctx.createImageData(400, 400);
@@ -178,17 +255,15 @@
                 for (let i = 0; i < data.length; i += 4) {
                     const byteIndex = (i / 4) % len;
                     const byteValue = binaryString.charCodeAt(byteIndex);
-
-                    data[i] = byteValue;     // R
-                    data[i + 1] = (byteValue + 100) % 256; // G (Slight variation for better visual)
-                    data[i + 2] = (byteValue * 2) % 256;   // B
-                    data[i + 3] = 255;       // Alpha
+                    data[i] = byteValue;
+                    data[i + 1] = (byteValue + 100) % 256;
+                    data[i + 2] = (byteValue * 2) % 256;
+                    data[i + 3] = 255;
                 }
 
                 ctx.putImageData(imgData, 0, 0);
                 canvas.style.display = 'block';
                 if(renderMsg) renderMsg.style.display = 'none';
-
             } catch (e) {
                 console.error("Canvas painting failed", e);
                 if(renderMsg) renderMsg.innerHTML = '<span class="text-danger">Binary Scramble Error</span>';

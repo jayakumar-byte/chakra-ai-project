@@ -2,46 +2,109 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vault History - Chakra AI</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
-        body { background: #f8f9fa; font-family: 'Segoe UI', sans-serif; }
-        .vault-card { border: none; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.2s; }
-        .vault-card:hover { transform: translateY(-5px); }
-        .file-icon { font-size: 2rem; color: #1a237e; }
-        .btn-action { border-radius: 10px; padding: 8px 15px; font-weight: 600; }
-        .text-truncate { max-width: 100%; display: inline-block; }
+        body {
+            background: #0f172a;
+            min-height: 100vh;
+            font-family: 'Segoe UI', sans-serif;
+            color: white;
+            padding-bottom: 50px;
+        }
+
+        .navbar {
+            background-color: rgba(15, 23, 42, 0.9) !important;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .vault-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 18px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .vault-card:hover {
+            transform: translateY(-5px);
+            border-color: #38bdf8;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .file-icon { font-size: 2rem; color: #38bdf8; }
+
+        .btn-action {
+            border-radius: 12px;
+            padding: 10px 15px;
+            font-weight: 600;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        /* Text Truncate Logic for long filenames on small screens */
+        .file-info h6 {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 180px; /* Adjusted for mobile */
+        }
+
+        @media (min-width: 768px) {
+            .file-info h6 { max-width: 250px; }
+        }
+
+        .empty-state {
+            padding: 100px 20px;
+            text-align: center;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 576px) {
+            .container { padding-left: 20px; padding-right: 20px; }
+            h2 { font-size: 1.5rem; }
+            .vault-card { padding: 15px; }
+        }
     </style>
 </head>
 <body>
 
-<nav class="navbar navbar-dark bg-dark mb-4">
+<nav class="navbar navbar-dark sticky-top mb-4">
     <div class="container">
-        <a class="navbar-brand" th:href="@{/api/chakra/dashboard}"><i class="fas fa-arrow-left me-2"></i> Back to Dashboard</a>
+        <a class="navbar-brand small fw-bold" th:href="@{/api/chakra/dashboard}">
+            <i class="fas fa-arrow-left me-2"></i> Dashboard
+        </a>
     </div>
 </nav>
 
 <div class="container">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="fw-bold"><i class="fas fa-vault me-2 text-primary"></i> Your Encrypted Vault</h2>
-        <span class="badge bg-primary px-3 py-2" th:text="${files.size() + ' Files Secured'}"></span>
+    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center mb-4 gap-3">
+        <div>
+            <h2 class="fw-bold mb-0 text-info"><i class="fas fa-vault me-2"></i> Your Vault</h2>
+            <p class="text-muted small mb-0">List of all your securely encrypted files.</p>
+        </div>
+        <span class="badge bg-info text-dark px-3 py-2 rounded-pill fw-bold" th:text="${files.size() + ' SECURED'}">0 SECURED</span>
     </div>
 
-    <div th:if="${param.message}" class="alert alert-success alert-dismissible fade show" role="alert">
-        <span th:text="${param.message}"></span>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <div th:if="${param.message}" class="alert alert-success bg-success bg-opacity-10 border-0 text-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-2"></i> <span th:text="${param.message}"></span>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
     </div>
-    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+    <div th:if="${error}" class="alert alert-danger bg-danger bg-opacity-10 border-0 text-danger" th:text="${error}"></div>
 
-    <div class="row g-4">
-        <div class="col-md-6 col-lg-4" th:each="file : ${files}">
-            <div class="card vault-card p-3">
-                <div class="d-flex align-items-center mb-3">
-                    <i class="fas fa-file-shield file-icon me-3"></i>
-                    <div class="overflow-hidden">
-                        <h6 class="mb-0 text-truncate" th:text="${file.originalFileName}">filename.png</h6>
-                        <small class="text-muted d-block" th:text="${file.fileType}">image/png</small>
+    <div class="row g-3">
+        <div class="col-12 col-md-6 col-lg-4" th:each="file : ${files}">
+            <div class="vault-card">
+                <div class="d-flex align-items-center mb-4">
+                    <div class="bg-dark rounded-3 p-3 me-3">
+                        <i class="fas fa-file-shield file-icon"></i>
+                    </div>
+                    <div class="file-info overflow-hidden">
+                        <h6 class="mb-0 text-white fw-bold" th:text="${file.originalFileName}">filename.png</h6>
+                        <small class="text-muted" th:text="${file.fileType}">image/png</small>
                     </div>
                 </div>
 
@@ -52,13 +115,13 @@
 
                     <div class="d-flex gap-2">
                         <a th:href="@{/api/chakra/share-management}" class="btn btn-outline-info btn-action flex-grow-1">
-                            <i class="fas fa-share-nodes"></i> Share
+                            <i class="fas fa-share-nodes me-2"></i> Share
                         </a>
 
                         <form th:action="@{'/api/chakra/delete/' + ${file.id}}" method="POST"
-                              onsubmit="return confirm('Macha, confirm-aa delete pannidalaama?')">
+                              onsubmit="return confirm('Macha, confirm-aa indha file-ah delete pannidalaama?')">
                             <button type="submit" class="btn btn-outline-danger btn-action">
-                                <i class="fas fa-trash"></i>
+                                <i class="fas fa-trash-can"></i>
                             </button>
                         </form>
                     </div>
@@ -66,12 +129,14 @@
             </div>
         </div>
 
-        <div class="col-12 text-center py-5" th:if="${#lists.isEmpty(files)}">
-            <i class="fas fa-folder-open fa-4x text-muted mb-3"></i>
-            <h5>Your vault is empty, macha!</h5>
-            <p class="text-muted">You haven't encrypted any files yet.</p>
-            <a th:href="@{/api/chakra/encrypt-page}" class="btn btn-primary mt-2 text-white">
-                <i class="fas fa-plus me-2"></i>Encrypt First File
+        <div class="col-12 empty-state" th:if="${#lists.isEmpty(files)}">
+            <div class="bg-dark rounded-circle d-inline-flex align-items-center justify-content-center mb-4" style="width: 100px; height: 100px;">
+                <i class="fas fa-folder-open fa-3x text-muted"></i>
+            </div>
+            <h5 class="text-white">Your vault is empty, macha!</h5>
+            <p class="text-muted small">You haven't encrypted any files yet. Let's secure something!</p>
+            <a th:href="@{/api/chakra/encrypt-page}" class="btn btn-info mt-2 px-4 py-2 fw-bold text-dark">
+                <i class="fas fa-plus me-2"></i> Encrypt First File
             </a>
         </div>
     </div>
