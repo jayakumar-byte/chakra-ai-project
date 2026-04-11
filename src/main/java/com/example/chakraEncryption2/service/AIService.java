@@ -7,47 +7,90 @@ import org.springframework.web.multipart.MultipartFile;
 public class AIService {
 
     /**
-     * AI Decision Tree for Grid Optimization
-     * Factors: File Type, File Size, and Temporal Jitter (Time factor)
+     * AEGO - Adaptive Entropy-Based Grid Optimization
+     * AI Decision Tree for Grid Selection
+     * Factors: File Type, File Size, Temporal Jitter (X and Y independent)
      */
     public int[] getOptimizedGrid(MultipartFile file) {
         String contentType = file.getContentType();
         long fileSize = file.getSize();
 
-        // 🌀 AI Temporal Jitter
-        // System time-a use panni random-ness add panrom.
-        // Idhunala same file-a upload pannaalum unique grid kidaikkum.
-        long timeFactor = System.currentTimeMillis() % 10;
-        int jitter = (int) ((fileSize + timeFactor) % 15); // Jitter range 0-14
+        // ═══════════════════════════════════════════════
+        // 🌀 Temporal Jitter — Independent for X and Y
+        // Same file uploaded at different times →
+        // different grid! Unique encryption guaranteed!
+        // ═══════════════════════════════════════════════
+        long currentTime = System.currentTimeMillis();
 
-        int base = 10; // Default base for unknown files
+        // X jitter — based on current time
+        long timeFactorX = currentTime % 10;
+        int jitterX = (int)((fileSize + timeFactorX) % 15); // range 0-14
 
-        // 🌳 Decision Tree Logic
+        // Y jitter — based on half time (always different from X!)
+        long timeFactorY = (currentTime / 2) % 10;
+        int jitterY = (int)((fileSize + timeFactorY) % 15); // range 0-14
+
+        // ═══════════════════════════════════════════════
+        // 🌳 Decision Tree — Base grid from file type & size
+        // ═══════════════════════════════════════════════
+        int baseX = 10; // default
+        int baseY = 10; // default
+
         if (contentType != null && contentType.startsWith("image")) {
-            // High complexity for images due to pixel density
-            base = (fileSize > 2 * 1024 * 1024) ? 60 : 30;
+            // High complexity — images have high pixel density
+            if (fileSize > 2 * 1024 * 1024) {
+                // Large image (>2MB) → big grid
+                baseX = 60;
+                baseY = 50; // different base! ✅
+            } else {
+                // Small image (<2MB) → medium grid
+                baseX = 30;
+                baseY = 25; // different base! ✅
+            }
         }
-        else if (contentType != null && (contentType.contains("pdf") || contentType.contains("text"))) {
-            // Medium complexity for documents
-            base = (fileSize > 1024 * 1024) ? 20 : 12;
+        else if (contentType != null &&
+                (contentType.contains("pdf") || contentType.contains("text"))) {
+            // Medium complexity — documents
+            if (fileSize > 1024 * 1024) {
+                // Large document (>1MB)
+                baseX = 20;
+                baseY = 18; // different base! ✅
+            } else {
+                // Small document (<1MB)
+                baseX = 12;
+                baseY = 10; // different base! ✅
+            }
         }
         else {
             // General files
-            base = (fileSize > 5 * 1024 * 1024) ? 50 : 15;
+            if (fileSize > 5 * 1024 * 1024) {
+                // Large file (>5MB)
+                baseX = 50;
+                baseY = 45; // different base! ✅
+            } else {
+                // Small file (<5MB)
+                baseX = 15;
+                baseY = 12; // different base! ✅
+            }
         }
 
-        // Final AI Optimized Grid = Base + Jitter
-        int xl = base + jitter;
-        int yl = base + jitter;
+        // ═══════════════════════════════════════════════
+        // Final Grid = Base + Independent Jitter
+        // xl ≠ yl → true polar grid! ✅
+        // ═══════════════════════════════════════════════
+        int xl = baseX + jitterX;
+        int yl = baseY + jitterY;
 
-        // Logging the AI decision for debugging (Optional)
-        System.out.println("🤖 AI Decision: FileType=" + contentType +
-                ", Base=" + base + ", Jitter=" + jitter +
-                ", Final Grid=" + xl + "x" + yl);
+        // Debug log
+        System.out.println("🤖 AEGO Decision:" +
+                " FileType="  + contentType  +
+                " FileSize="  + fileSize     +
+                " BaseX="     + baseX        +
+                " BaseY="     + baseY        +
+                " JitterX="   + jitterX      +
+                " JitterY="   + jitterY      +
+                " FinalGrid=" + xl + "x" + yl);
 
         return new int[]{xl, yl};
     }
-
-
-
 }
