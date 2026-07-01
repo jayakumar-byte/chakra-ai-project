@@ -7,7 +7,8 @@
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #0f172a;
+            /* Soft light background for consistency */
+            background: #f8fafc;
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -15,21 +16,23 @@
             margin: 0;
             padding: 20px;
             box-sizing: border-box;
-            color: white;
+            color: #1e293b; /* Dark slate text */
         }
         .reg-container {
-            background: rgba(255, 255, 255, 0.05);
+            /* Clean white card with soft shadow */
+            background: rgba(255, 255, 255, 0.9);
             padding: 30px;
             border-radius: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
             width: 100%;
-            max-width: 420px; /* Register-ku konjam extra width for better feel */
+            max-width: 420px;
             backdrop-filter: blur(10px);
             text-align: center;
         }
         h2 {
-            color: #38bdf8;
+            /* Using a solid primary blue for headings */
+            color: #0284c7;
             margin-bottom: 25px;
             font-weight: bold;
             font-size: 26px;
@@ -38,25 +41,28 @@
             width: 100%;
             padding: 14px;
             margin: 12px 0;
-            border: 1px solid rgba(255,255,255,0.2);
+            /* Grey border for clean inputs */
+            border: 1px solid #cbd5e1;
             border-radius: 8px;
             box-sizing: border-box;
-            background: rgba(0,0,0,0.3);
-            color: white;
+            background: #ffffff;
+            color: #1e293b;
             font-size: 16px;
             outline: none;
             transition: 0.3s;
         }
         input:focus {
-            border-color: #38bdf8;
-            background: rgba(0,0,0,0.4);
+            border-color: #0ea5e9;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
         }
-        input::placeholder { color: rgba(255,255,255,0.4); }
+        input::placeholder { color: #94a3b8; }
 
         button {
             width: 100%;
             padding: 14px;
-            background: #22c55e; /* Green color for registration */
+            /* Maintaining the green theme for Registration success actions */
+            background: #16a34a;
             color: white;
             border: none;
             border-radius: 8px;
@@ -65,10 +71,12 @@
             font-weight: bold;
             margin-top: 15px;
             transition: 0.3s;
+            box-shadow: 0 4px 6px rgba(22, 163, 74, 0.2);
         }
         button:hover {
-            background: #16a34a;
+            background: #15803d;
             transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(22, 163, 74, 0.3);
         }
         button:active {
             transform: translateY(0);
@@ -76,11 +84,11 @@
 
         /* Error Alert Styling */
         .alert-error {
-            background: rgba(239, 68, 68, 0.15);
-            color: #f87171;
+            background: #fef2f2;
+            color: #dc2626;
             padding: 12px;
             border-radius: 8px;
-            border: 1px solid rgba(239, 68, 68, 0.3);
+            border: 1px solid #fecaca;
             font-size: 14px;
             margin-bottom: 20px;
             text-align: center;
@@ -90,16 +98,16 @@
         p {
             margin-top: 25px;
             font-size: 14px;
-            color: #94a3b8;
+            color: #64748b;
         }
 
         a {
-            color: #38bdf8;
+            color: #0ea5e9;
             text-decoration: none;
             font-weight: 600;
             transition: 0.3s;
         }
-        a:hover { opacity: 0.8; text-decoration: underline; }
+        a:hover { color: #0284c7; text-decoration: underline; }
 
         /* Mobile optimization */
         @media (max-width: 480px) {

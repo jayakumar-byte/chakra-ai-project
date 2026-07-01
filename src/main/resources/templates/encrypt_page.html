@@ -6,27 +6,31 @@
     <title>Chakra AI | Secure Encryption Hub</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <style>
         body {
-            background: #0f172a;
+            /* Soft light background with a subtle gradient */
+            background: #f8fafc;
             min-height: 100vh;
             font-family: 'Segoe UI', sans-serif;
-            color: white;
+            color: #1e293b; /* Dark slate text for better readability */
             display: flex;
             align-items: center;
-            padding: 20px 0; /* Mobile-la top/bottom space kuraichuruken */
+            padding: 20px 0;
         }
         .glass-card {
-            background: rgba(255, 255, 255, 0.03);
+            /* Light glassmorphism effect */
+            background: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(0, 0, 0, 0.05);
             border-radius: 24px;
-            padding: 30px; /* Reduced for mobile */
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); /* Added soft shadow */
         }
 
         /* Responsive Grid Logic */
         .left-section {
-            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            border-right: 1px solid rgba(0, 0, 0, 0.05);
             padding-right: 30px;
         }
         .preview-side { padding-left: 30px; }
@@ -34,7 +38,7 @@
         @media (max-width: 991.98px) {
             .left-section {
                 border-right: none;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                border-bottom: 1px solid rgba(0, 0, 0, 0.05);
                 padding-right: 0;
                 padding-bottom: 40px;
                 margin-bottom: 40px;
@@ -43,23 +47,29 @@
         }
 
         .mode-btn {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: #ffffff;
+            border: 1px solid rgba(0, 0, 0, 0.05);
             transition: 0.3s;
             padding: 20px;
             border-radius: 15px;
             cursor: pointer;
             text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
         }
-        .mode-btn:hover { background: rgba(99, 102, 241, 0.2); border-color: #6366f1; transform: translateY(-5px); }
+        .mode-btn:hover {
+            background: rgba(99, 102, 241, 0.1);
+            border-color: #6366f1;
+            transform: translateY(-5px);
+        }
         .mode-btn i { font-size: 2rem; margin-bottom: 10px; color: #6366f1; }
+        .mode-btn h5 { color: #1e293b; }
 
         .preview-box {
             width: 100%;
             max-width: 400px;
             aspect-ratio: 1 / 1;
-            background: rgba(0, 0, 0, 0.5);
-            border: 2px dashed rgba(99, 102, 241, 0.3);
+            background: #f1f5f9; /* Lighter preview area */
+            border: 2px dashed #cbd5e1;
             border-radius: 20px;
             display: flex;
             align-items: center;
@@ -71,27 +81,33 @@
         #scrambledCanvas { width: 100%; height: 100%; display: none; object-fit: contain; image-rendering: pixelated; }
 
         .encrypted-stream-box {
-            background: #000;
+            background: #1e293b; /* Keeping this dark for that "Matrix/Code" look */
             border-radius: 12px;
             padding: 15px;
             font-family: 'Courier New', monospace;
-            font-size: 10px; /* Shrunk for mobile */
+            font-size: 10px;
             color: #10b981;
             height: 250px;
             overflow-y: auto;
             word-break: break-all;
             text-align: left;
-            border: 1px solid #1e293b;
+            border: 1px solid #0f172a;
         }
 
-        .glow-text { color: #fff; text-shadow: 0 0 15px rgba(99, 102, 241, 0.6); font-weight: 800; }
-        .form-control {
-            background: rgba(0, 0, 0, 0.3) !important;
-            border: 1px solid rgba(255, 255, 255, 0.1) !important;
-            color: white !important;
-            border-radius: 12px;
-            font-size: 16px; /* Auto-zoom fix for mobile */
+        .glow-text {
+            color: #1e293b;
+            text-shadow: 0 0 10px rgba(99, 102, 241, 0.2);
+            font-weight: 800;
         }
+
+        .form-control {
+            background: #ffffff !important;
+            border: 1px solid #cbd5e1 !important;
+            color: #1e293b !important;
+            border-radius: 12px;
+            font-size: 16px;
+        }
+        .form-control::placeholder { color: #94a3b8; }
 
         .btn-encrypt {
             background: linear-gradient(45deg, #4f46e5, #7c3aed);
@@ -101,12 +117,23 @@
             font-weight: bold;
             border-radius: 12px;
             transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
         }
+        .btn-encrypt:hover { opacity: 0.9; transform: scale(1.02); }
 
         #mainFormArea, #loader, #successState { display: none; }
 
         /* Animation */
-        .scan-line { width: 100%; height: 3px; background: #6366f1; position: absolute; top: 0; left: 0; box-shadow: 0 0 15px #6366f1; animation: scan 2.5s linear infinite; }
+        .scan-line {
+            width: 100%;
+            height: 3px;
+            background: #6366f1;
+            position: absolute;
+            top: 0;
+            left: 0;
+            box-shadow: 0 0 15px #6366f1;
+            animation: scan 2.5s linear infinite;
+        }
         @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
     </style>
 </head>
@@ -116,10 +143,20 @@
     <div class="row justify-content-center">
         <div class="col-xl-10">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <a th:href="@{/api/chakra/dashboard}" class="btn btn-outline-light btn-sm px-3">
-                    <i class="fas fa-arrow-left me-2"></i> Dashboard
+                <a th:href="@{/api/chakra/dashboard}" class="btn btn-outline-dark btn-sm px-3 fw-bold" style="border-radius: 10px;">
+                    <i class="fas fa-arrow-left me-2 text-info"></i> Dashboard
                 </a>
-                <span class="small text-info d-none d-sm-inline"><i class="fas fa-lock me-1"></i> SECURTIY ACTIVED</span>
+                <span class="small text-info fw-bold"><i class="fas fa-lock me-1"></i> SECURITY ACTIVE</span>
+            </div>
+
+            <div th:if="${error}" class="alert alert-danger alert-dismissible fade show border-0 bg-danger bg-opacity-10 text-danger mb-4 fw-bold animate__animated animate__shakeX" role="alert" style="border-radius: 15px;">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-exclamation-triangle fa-lg me-3"></i>
+                    <div>
+                        <span th:text="${error}">Validation failed, macha!</span>
+                    </div>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
 
             <div class="glass-card shadow-lg">
@@ -132,12 +169,12 @@
                             <div class="row g-2">
                                 <div class="col-6">
                                     <div class="mode-btn" onclick="setMode('image')">
-                                        <i class="fas fa-images"></i><br><small class="d-block mt-1">IMAGE</small>
+                                        <i class="fas fa-images"></i><br><small class="d-block mt-1 fw-bold">IMAGE</small>
                                     </div>
                                 </div>
                                 <div class="col-6">
                                     <div class="mode-btn" onclick="setMode('text')">
-                                        <i class="fas fa-file-code"></i><br><small class="d-block mt-1">FILE/TEXT</small>
+                                        <i class="fas fa-file-code"></i><br><small class="d-block mt-1 fw-bold">FILE/TEXT</small>
                                     </div>
                                 </div>
                             </div>
@@ -149,18 +186,19 @@
                                 <div class="mb-4 mt-2">
                                     <label class="small fw-bold text-info mb-2" id="fileLabel">UPLOAD FILE</label>
                                     <input type="file" name="file" class="form-control" required>
+                                    <small id="sizeHelpText" class="text-muted d-block mt-1" style="font-size: 0.75rem;"></small>
                                 </div>
                                 <div class="row g-2 mb-4">
                                     <div class="col-6">
-                                        <label class="small fw-bold text-white mb-1">RADIUS</label>
-                                        <input type="number" step="0.01" name="radius" class="form-control" value="1.55" required>
+                                        <label class="small fw-bold text-dark mb-1">RADIUS (Max 15)</label>
+                                        <input type="number" step="0.01" min="0.01" max="15" name="radius" class="form-control" value="1.55" required>
                                     </div>
                                     <div class="col-6">
-                                        <label class="small fw-bold text-white mb-1">ANGLE</label>
-                                        <input type="number" name="theta" class="form-control" value="45" required>
+                                        <label class="small fw-bold text-dark mb-1">ANGLE (1-360°)</label>
+                                        <input type="number" min="2" max="360" name="theta" class="form-control" value="45" required>
                                     </div>
                                 </div>
-                                <button type="submit" class="btn btn-encrypt w-100" onclick="startProcessing()">
+                                <button type="submit" class="btn btn-encrypt w-100">
                                     <i class="fas fa-bolt me-2"></i> START ENCRYPTION
                                 </button>
                                 <button type="button" class="btn btn-link btn-sm text-muted w-100 mt-2 text-decoration-none" onclick="location.reload()">Reset Mode</button>
@@ -168,7 +206,7 @@
                         </div>
 
                         <div th:if="${encryptionSuccess}" class="text-center text-lg-start">
-                            <div class="alert alert-success bg-success bg-opacity-10 border-0 text-success py-3 small">
+                            <div class="alert alert-success bg-success bg-opacity-10 border-0 text-success py-3 small mb-3">
                                 <i class="fas fa-check-circle me-2"></i> Encryption Successful!
                             </div>
                             <p class="small text-muted mb-0">Original Name:</p>
@@ -201,8 +239,8 @@
                             <div class="preview-box shadow-sm">
                                 <div th:if="${isImage}" class="w-100 h-100">
                                     <canvas id="scrambledCanvas"></canvas>
-                                    <div id="renderingMsg" class="position-absolute top-50 start-50 translate-middle small">
-                                        <i class="fas fa-spinner fa-spin me-2"></i> Rendering Scramble...
+                                    <div id="renderingMsg" class="position-absolute top-50 start-50 translate-middle small text-dark">
+                                        <i class="fas fa-spinner fa-spin me-2 text-info"></i> Rendering Scramble...
                                     </div>
                                 </div>
 
@@ -229,14 +267,30 @@
         document.getElementById('selectedMode').value = mode;
         document.getElementById('modeSelection').style.display = 'none';
         document.getElementById('mainFormArea').style.display = 'block';
-        document.getElementById('fileLabel').innerText = (mode === 'image' ? 'CHOOSE IMAGE' : 'CHOOSE FILE/TEXT');
+
+        const label = document.getElementById('fileLabel');
+        const helpText = document.getElementById('sizeHelpText');
+
+        if(mode === 'image') {
+            label.innerText = 'CHOOSE IMAGE';
+            helpText.innerHTML = '<i class="fas fa-info-circle me-1"></i> Constraint: Image size must be <strong>less than 2MB</strong>';
+        } else {
+            label.innerText = 'CHOOSE FILE/TEXT';
+            helpText.innerHTML = '<i class="fas fa-info-circle me-1"></i> Constraint: Text/PDF size must be <strong>less than 5MB</strong>';
+        }
     }
 
-    function startProcessing() {
+    // Intercept submit to manage loaders properly
+    document.getElementById('encryptForm').addEventListener('submit', function() {
         document.getElementById('mainFormArea').style.display = 'none';
-        document.getElementById('readyState').style.display = 'none';
+        if(document.getElementById('readyState')) {
+            document.getElementById('readyState').style.display = 'none';
+        }
+        if(document.getElementById('successState')) {
+            document.getElementById('successState').style.display = 'none';
+        }
         document.getElementById('loader').style.display = 'block';
-    }
+    });
 
     window.onload = function() {
         if (isSuccess && isImg && base64Data) {

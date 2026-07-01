@@ -7,14 +7,31 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
     <style>
-        body { background: #0f172a; color: white; font-family: 'Segoe UI', sans-serif; overflow-x: hidden; }
+        body {
+            /* Consistent soft light background */
+            background: #f8fafc;
+            color: #1e293b;
+            font-family: 'Segoe UI', sans-serif;
+            overflow-x: hidden;
+        }
 
         /* Stat Card & Hover Effects */
         .stat-card {
-            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 15px; padding: 25px; transition: 0.3s; height: 100%;
+            /* White card with subtle shadow */
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 15px;
+            padding: 25px;
+            transition: 0.3s;
+            height: 100%;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
         }
-        .stat-card:hover { transform: translateY(-5px); background: rgba(255, 255, 255, 0.08); border-color: #6366f1; }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            background: #ffffff;
+            border-color: #6366f1;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.05);
+        }
 
         .icon-circle {
             width: 60px; height: 60px; border-radius: 50%;
@@ -22,30 +39,49 @@
         }
 
         /* Audit Table Styling */
-        .table-container { background: rgba(255, 255, 255, 0.03); border-radius: 15px; padding: 20px; }
+        .table-container {
+            background: #ffffff;
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+        }
         .table-responsive-scroll {
-            max-height: 450px; overflow-y: auto; scrollbar-width: thin;
-            scrollbar-color: #6366f1 rgba(255,255,255,0.05);
+            max-height: 450px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: #6366f1 #f1f5f9;
         }
         .table-responsive-scroll::-webkit-scrollbar { width: 6px; }
         .table-responsive-scroll::-webkit-scrollbar-thumb { background: #6366f1; border-radius: 10px; }
-        .sticky-header { position: sticky; top: 0; background: #1e293b; z-index: 10; }
 
-        /* Row Highlighting Logic */
-        .row-reported { border-left: 5px solid #0ea5e9 !important; background: rgba(14, 165, 233, 0.05) !important; }
-        .row-red { border-left: 5px solid #ef4444 !important; background: rgba(239, 68, 68, 0.05) !important; }
-        .row-yellow { border-left: 5px solid #f59e0b !important; background: rgba(245, 158, 11, 0.05) !important; }
-        /* Dismissed Row Style */
-        .row-dismissed { border-left: 5px solid #64748b !important; opacity: 0.8; background: rgba(100, 116, 139, 0.05) !important; }
+        /* Light sticky header for the table */
+        .sticky-header {
+            position: sticky;
+            top: 0;
+            background: #f1f5f9;
+            color: #475569;
+            z-index: 10;
+        }
 
-        /* Status Badges */
+        /* Row Highlighting Logic - Adjusted for light theme transparency */
+        .row-reported { border-left: 5px solid #0ea5e9 !important; background: rgba(14, 165, 233, 0.04) !important; }
+        .row-red { border-left: 5px solid #ef4444 !important; background: rgba(239, 68, 68, 0.04) !important; }
+        .row-yellow { border-left: 5px solid #f59e0b !important; background: rgba(245, 158, 11, 0.04) !important; }
+        .row-dismissed { border-left: 5px solid #64748b !important; opacity: 0.8; background: rgba(100, 116, 139, 0.04) !important; }
+
+        /* Status Badges - Keeping bold colors for visibility */
         .badge-reported { background: #0ea5e9; color: white; padding: 5px 10px; border-radius: 6px; font-weight: bold; font-size: 0.7rem; }
-        .badge-wrongkey { background: #f59e0b; color: black; padding: 5px 10px; border-radius: 6px; font-weight: bold; font-size: 0.7rem; }
+        .badge-wrongkey { background: #f59e0b; color: #ffffff; padding: 5px 10px; border-radius: 6px; font-weight: bold; font-size: 0.7rem; }
         .badge-unauthorized { background: #ef4444; color: white; padding: 5px 10px; border-radius: 6px; font-weight: bold; font-size: 0.7rem; }
-        .badge-dismissed { background: transparent; border: 1px solid #94a3b8; color: #94a3b8; padding: 5px 10px; border-radius: 6px; font-weight: bold; font-size: 0.7rem; }
+        .badge-dismissed { background: transparent; border: 1px solid #94a3b8; color: #64748b; padding: 5px 10px; border-radius: 6px; font-weight: bold; font-size: 0.7rem; }
 
         /* Report Card Styling */
-        .request-card { border: 1px solid rgba(255, 193, 7, 0.4) !important; background: rgba(255, 193, 7, 0.08) !important; }
+        .request-card {
+            border: 1px solid #fcd34d !important;
+            background: #fffbeb !important;
+            color: #92400e !important;
+        }
     </style>
 </head>
 <body>

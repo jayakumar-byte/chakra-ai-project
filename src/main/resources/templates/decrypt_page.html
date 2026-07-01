@@ -10,50 +10,64 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         body {
-            background: #0f172a;
+            /* Soft light background for eye comfort */
+            background: #f8fafc;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             font-family: 'Segoe UI', sans-serif;
-            color: white;
-            padding: 20px; /* Mobile edges-la space-ku */
+            color: #1e293b; /* Dark slate for readability */
+            padding: 20px;
             margin: 0;
         }
         .upload-box {
-            background: rgba(255, 255, 255, 0.03);
+            /* Light glass card effect with shadow */
+            background: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(0, 0, 0, 0.05);
             border-radius: 20px;
-            padding: 30px; /* Adjusted for better mobile view */
+            padding: 30px;
             width: 100%;
             max-width: 500px;
             text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
         }
         .drop-zone {
-            border: 2px dashed rgba(99, 102, 241, 0.5);
-            padding: 30px; /* Reduced for small screens */
+            /* Subtle border and light fill */
+            border: 2px dashed #cbd5e1;
+            padding: 30px;
             border-radius: 15px;
             margin-bottom: 20px;
             cursor: pointer;
             transition: 0.3s;
-            background: rgba(0,0,0,0.2);
+            background: #ffffff;
         }
-        .drop-zone:hover { background: rgba(99, 102, 241, 0.1); border-color: #6366f1; }
+        .drop-zone:hover {
+            background: rgba(99, 102, 241, 0.05);
+            border-color: #6366f1;
+        }
 
-        .glow-text { text-shadow: 0 0 15px rgba(99, 102, 241, 0.6); }
+        .glow-text {
+            color: #1e293b;
+            text-shadow: 0 0 10px rgba(99, 102, 241, 0.1);
+        }
 
         .form-control {
-            background: rgba(0,0,0,0.3) !important;
-            border: 1px solid rgba(255,255,255,0.1) !important;
-            color: white !important;
-            font-size: 16px; /* Auto-zoom fix in iOS/Android */
+            /* Clean white inputs with grey border */
+            background: #ffffff !important;
+            border: 1px solid #cbd5e1 !important;
+            color: #1e293b !important;
+            font-size: 16px;
             padding: 12px;
         }
         .form-control:focus {
             border-color: #6366f1 !important;
-            box-shadow: none;
+            box-shadow: 0 0 0 0.2rem rgba(99, 102, 241, 0.1) !important;
+            outline: none;
+        }
+        .form-control::placeholder {
+            color: #94a3b8;
         }
 
         .btn-primary {
@@ -61,9 +75,15 @@
             border: none;
             padding: 12px;
             font-weight: bold;
+            color: white !important; /* Ensure text is white on purple button */
             transition: 0.3s;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
         }
-        .btn-primary:hover { opacity: 0.9; transform: translateY(-2px); }
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(79, 70, 229, 0.4);
+        }
 
         /* Tablet/Mobile tweaks */
         @media (max-width: 576px) {
@@ -83,52 +103,52 @@
         <h3 class="fw-bold mb-3">Unlock Your Data</h3>
         <p class="text-muted small mb-4">Upload the encrypted file to verify its identity within the Chakra engine.</p>
 
-        <div th:if="${error}" class="alert alert-danger bg-transparent border-danger text-danger small" th:text="${error}"></div>
+        <div th:if="${error}" class="alert alert-danger border-0 bg-danger bg-opacity-10 text-danger small fw-bold mb-3 p-3 animate__animated animate__shakeX" style="border-radius: 12px;" th:text="${error}"></div>
 
         <form th:action="@{/api/chakra/decrypt-upload}" method="POST" enctype="multipart/form-data" id="uploadForm">
             <div class="drop-zone" onclick="document.getElementById('fileInput').click()">
                 <i class="fas fa-cloud-upload-alt text-muted mb-2 fa-2x"></i>
-                <p class="mb-0 small">Click or drag encrypted file here</p>
+                <p class="mb-0 small fw-bold text-muted">Click or drag encrypted file here</p>
                 <input type="file" name="file" id="fileInput" hidden required onchange="document.getElementById('uploadForm').submit()">
             </div>
-            <button type="submit" class="btn btn-primary w-100 fw-bold">
+            <button type="submit" class="btn btn-primary w-100 fw-bold" style="border-radius: 12px;">
                 <i class="fas fa-magnifying-glass me-2"></i> Verify File Hash
             </button>
         </form>
 
-        <a th:href="@{/api/chakra/dashboard}" class="btn btn-link mt-3 text-decoration-none text-muted small">
-            <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+        <a th:href="@{/api/chakra/dashboard}" class="btn btn-link mt-3 text-decoration-none text-muted small fw-bold">
+            <i class="fas fa-arrow-left me-1 text-info"></i> Back to Dashboard
         </a>
     </div>
 
     <div th:if="${verificationSuccess}" class="upload-box animate__animated animate__zoomIn">
         <i class="fas fa-key fa-3x text-warning mb-3 glow-text"></i>
         <h3 class="fw-bold mb-1">Verify Credentials</h3>
-        <p class="text-muted small mb-4">File: <span class="text-info fw-bold text-break" th:text="${fileName}"></span></p>
+        <p class="text-muted small mb-4 fw-bold">File: <span class="text-info text-break" th:text="${fileName}"></span></p>
 
         <form th:action="@{'/api/chakra/decrypt/' + ${fileId}}" method="POST" onsubmit="submitDecryption(event)">
             <div class="mb-3 text-start">
-                <label class="form-label small fw-bold opacity-70">Radius Parameter (R)</label>
-                <input type="number" step="0.01" name="radius" class="form-control" placeholder="Enter original R" required>
+                <label class="form-label small fw-bold text-dark opacity-75">Radius Parameter (R)</label>
+                <input type="number" step="0.01" min="0.01" max="15" name="radius" class="form-control" placeholder="Enter original R (Max 15)" style="border-radius: 10px;" required>
             </div>
             <div class="mb-4 text-start">
-                <label class="form-label small fw-bold opacity-70">Angular Shift (θ)</label>
-                <input type="number" name="theta" class="form-control" placeholder="Enter original angle" required>
+                <label class="form-label small fw-bold text-dark opacity-75">Angular Shift (θ)</label>
+                <input type="number" min="2" max="360" name="theta" class="form-control" placeholder="Enter original angle (1-360°)" style="border-radius: 10px;" required>
             </div>
 
-            <button type="submit" class="btn btn-primary w-100 fw-bold">
+            <button type="submit" class="btn btn-primary w-100 fw-bold" style="border-radius: 12px;">
                 <i class="fas fa-unlock-keyhole me-2"></i> Decrypt & Download
             </button>
         </form>
 
-        <a th:href="@{/api/chakra/decrypt-hub}" class="btn btn-link mt-3 text-decoration-none text-muted small">
-            <i class="fas fa-redo me-1"></i> Verify a different file
+        <a th:href="@{/api/chakra/decrypt-hub}" class="btn btn-link mt-3 text-decoration-none text-muted small fw-bold">
+            <i class="fas fa-redo me-1 text-warning"></i> Verify a different file
         </a>
     </div>
 
 </div>
 
-<script>
+<script th:inline="javascript">
     async function submitDecryption(event) {
         event.preventDefault();
 
@@ -149,17 +169,22 @@
             });
 
             if (response.ok) {
-                // ✅ SUCCESS - Clear Swal first
-                Swal.close();
+                // Fetch context filename from response header directly to support multi-extensions dynamically
+                const contentDisposition = response.headers.get('Content-Disposition');
+                let filename = "decrypted_file";
+                if (contentDisposition && contentDisposition.includes('filename=')) {
+                    filename = contentDisposition.split('filename=')[1].replace(/['"]/g, '');
+                }
 
                 const blob = await response.blob();
                 const url = window.URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = "decrypted_file";
+                a.download = filename;
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
 
                 Swal.fire({
                     icon: 'success',
@@ -168,7 +193,7 @@
                     confirmButtonColor: '#4f46e5'
                 });
             } else {
-                // 🚨 ERROR
+                // 🚨 ERROR PAYLOAD CAUGHT FROM CONTROLLER
                 const data = await response.json();
                 Swal.fire({
                     icon: 'error',

@@ -29,18 +29,13 @@ public class EncryptionController {
     @Autowired private UserRepository userRepo;
     @Autowired private AIService aiService;
 
-    // ═══════════════════════════════════════════════════════
-    // 📄 Encrypt Page
-    // ═══════════════════════════════════════════════════════
     @GetMapping("/encrypt-page")
     public String showEncryptPage(Model model) {
         model.addAttribute("encryptionSuccess", false);
         return "encrypt_page";
     }
 
-    // ═══════════════════════════════════════════════════════
-    // 🔒 Encrypt File
-    // ═══════════════════════════════════════════════════════
+    // ENCRYPTION PIPELINE WITH DOUBLE-LAYER VALIDATION
     @PostMapping("/encrypt")
     public String encryptFile(
             @RequestParam("file") MultipartFile file,
@@ -50,6 +45,25 @@ public class EncryptionController {
             Authentication auth,
             Model model) throws Exception {
 
+        model.addAttribute("encryptionSuccess", false);
+
+        // ---------------------------------------------------------------------
+        // ⭐ LAYER 1: File Constraints via AIService (Image < 2MB, Text < 5MB)
+        // ---------------------------------------------------------------------
+        if (!aiService.validateFileMetadata(file)) {
+            model.addAttribute("error", "File size validation failed, macha! Images must be < 2MB and Text files < 5MB.");
+            return "encrypt_page"; // Re-renders view instantly for another chance
+        }
+
+        // ---------------------------------------------------------------------
+        // ⭐ LAYER 2: Credentials Validation via ChakraCoreService (1-15, 0-360)
+        // ---------------------------------------------------------------------
+        if (!chakraService.validateGeometricParameters(r, theta)) {
+            model.addAttribute("error", "Invalid Credentials! Radius must be 1-15 and Theta 0-360 degrees.");
+            return "encrypt_page"; // Re-renders view instantly for another chance
+        }
+
+        // Both guards passed! Proceed to core mathematical processing
         User owner = userRepo.findByEmail(auth.getName()).orElseThrow();
 
         // Step 1: AI Grid Optimization (AEGO)
@@ -109,18 +123,14 @@ public class EncryptionController {
         return "encrypt_page";
     }
 
-    // ═══════════════════════════════════════════════════════
-    // 🔑 SHA-256 Hash Generator
-    // ═══════════════════════════════════════════════════════
+    // SHA-256
     private String generateHash(byte[] data) throws Exception {
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
         byte[] hash = digest.digest(data);
         return Base64.getEncoder().encodeToString(hash);
     }
 
-    // ═══════════════════════════════════════════════════════
-    // 🖼️ View Scrambled Image (Canvas Preview)
-    // ═══════════════════════════════════════════════════════
+    // PREVIEW
     @GetMapping("/view-scrambled/{id}")
     @ResponseBody
     public ResponseEntity<byte[]> viewScrambled(@PathVariable Long id) {
@@ -130,9 +140,7 @@ public class EncryptionController {
                 .body(ef.getEncryptedData());
     }
 
-    // ═══════════════════════════════════════════════════════
-    // 📥 Download Scrambled File
-    // ═══════════════════════════════════════════════════════
+    // DOWNLOAD
     @GetMapping("/download-scrambled/{id}")
     public ResponseEntity<byte[]> downloadScrambled(@PathVariable Long id) {
         EncryptedFile ef = fileRepo.findById(id).orElseThrow();

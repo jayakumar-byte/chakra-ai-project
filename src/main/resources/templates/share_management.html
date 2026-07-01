@@ -8,42 +8,66 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <style>
-        body { background: #0f172a; color: white; font-family: 'Segoe UI', sans-serif; min-height: 100vh; padding-bottom: 30px; }
+        body {
+            background: #f8fafc;
+            color: #1e293b;
+            font-family: 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            padding-bottom: 30px;
+        }
 
         .glass-card {
-            background: rgba(255, 255, 255, 0.03);
+            /* Light glass card with subtle shadow */
+            background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(0, 0, 0, 0.05);
             border-radius: 20px;
             padding: 25px;
             height: 100%;
             position: relative;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
         }
 
         .file-item {
-            background: rgba(255, 255, 255, 0.05);
+            /* Light background for list items */
+            background: #f1f5f9;
             border-radius: 12px;
             padding: 12px 15px;
             margin-bottom: 10px;
             cursor: pointer;
             transition: 0.3s;
-            border: 1px solid transparent;
+            border: 1px solid #e2e8f0;
+            color: #475569;
         }
-        .file-item:hover { background: rgba(99, 102, 241, 0.1); border-color: #4f46e5; }
-        .file-item.active {
-            background: rgba(99, 102, 241, 0.2);
+        .file-item:hover {
+            background: #eef2ff;
             border-color: #6366f1;
-            box-shadow: 0 0 15px rgba(99, 102, 241, 0.1);
+            color: #4f46e5;
+        }
+        .file-item.active {
+            background: #eef2ff;
+            border-color: #6366f1;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.1);
+            color: #4f46e5;
+            font-weight: 600;
         }
 
-        .glow-text { text-shadow: 0 0 15px rgba(99, 102, 241, 0.6); }
+        .glow-text {
+            color: #1e293b;
+            text-shadow: 0 0 10px rgba(99, 102, 241, 0.1);
+        }
 
         .form-control {
-            background: rgba(0,0,0,0.3) !important;
-            border: 1px solid rgba(255,255,255,0.1) !important;
-            color: white !important;
+            /* Clean white inputs */
+            background: #ffffff !important;
+            border: 1px solid #cbd5e1 !important;
+            color: #1e293b !important;
             border-radius: 10px;
             padding: 10px;
+        }
+        .form-control:focus {
+            border-color: #6366f1 !important;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1) !important;
         }
 
         .btn-grant {
@@ -51,8 +75,13 @@
             border: none;
             border-radius: 10px;
             font-weight: 600;
-            color: white;
+            color: white !important;
             padding: 10px 20px;
+            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
+        }
+        .btn-grant:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
         }
 
         .permission-list-container {
@@ -150,7 +179,7 @@
                 </div>
 
                 <div class="alert alert-info bg-transparent border-info border-opacity-25 text-info mt-4 mb-0" style="border-radius: 12px; font-size: 0.75rem;">
-                    <i class="fas fa-shield-halved me-2"></i> Authorized users can decrypt using the **Radius** and **Angle** keys [cite: 2026-01-04].
+                    <i class="fas fa-shield-halved me-2"></i> Authorized users can decrypt using the **Radius** and **Angle** keys.
                 </div>
             </div>
         </div>

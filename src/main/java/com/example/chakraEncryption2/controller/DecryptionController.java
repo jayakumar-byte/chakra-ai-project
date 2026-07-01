@@ -35,7 +35,7 @@ public class DecryptionController {
         return "decrypt_page";
     }
 
-    // ⭐ STEP 1: FILE IDENTIFICATION & AUTHORIZATION
+    // FILE IDENTIFICATION & AUTHORIZATION
     @PostMapping("/decrypt-upload")
     public String identifyFile(@RequestParam("file") MultipartFile file,
                                Authentication auth, RedirectAttributes ra) {
@@ -51,9 +51,9 @@ public class DecryptionController {
             EncryptedFile ef = matchedFile.get();
             User currentUser = userRepo.findByEmail(auth.getName()).orElseThrow();
 
-            // ⭐ RED ALERT LOGIC: Use Service for Mail Alert
+            // RED ALERT LOGIC: Use Service for Mail Alert
             if (!checkAccessSafe(ef, currentUser)) {
-                // ✅ Calling Service Method (This sends the Owner Alert Mail)
+                // Calling Service Method (This sends the Owner Alert Mail)
                 chakraService.logAnomaly(ef, currentUser, "NO_PERMISSION");
 
                 ra.addFlashAttribute("error", "🚨 ACCESS DENIED: Unauthorized person detected. Owner Notified!");
@@ -72,12 +72,18 @@ public class DecryptionController {
         }
     }
 
-    // ⭐ STEP 2: DECRYPTION ATTEMPT
+    // DECRYPTION ATTEMPT WITH INTEGRATED BOUNDARY GUARDS
     @PostMapping("/decrypt/{id}")
     public ResponseEntity<?> decryptFile(@PathVariable Long id,
                                          @RequestParam("radius") double r,
                                          @RequestParam("theta") int theta,
                                          Authentication auth) {
+
+        // ⭐ NEW: Geometric Boundary Validation Guard Check (Radius <= 15, Theta > 1 and <= 360)
+        if (!chakraService.validateGeometricParameters(r, theta)) {
+            return ResponseEntity.badRequest()
+                    .body(java.util.Map.of("error", "Invalid Credentials Constraints! Radius must be <= 15 and Theta must be 2 to 360 degrees, macha."));
+        }
 
         EncryptedFile ef = fileRepo.findById(id).orElseThrow();
         User currentUser = userRepo.findByEmail(auth.getName()).orElseThrow();
@@ -93,7 +99,7 @@ public class DecryptionController {
         int saltedTheta = theta + 7;
 
         try {
-            // ⭐ Decrypt call: Service handles WRONG_KEY anomaly inside
+            // Decrypt call: Service handles WRONG_KEY anomaly inside
             byte[] decryptedBytes = chakraService.decrypt(ef.getEncryptedData(), ef.getXl(), ef.getYl(),
                     saltedR, saltedTheta, ef, currentUser);
 

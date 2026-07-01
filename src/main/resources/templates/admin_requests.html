@@ -6,24 +6,51 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
-        body { background: #0f172a; color: white; font-family: 'Segoe UI', sans-serif; }
+        body {
+            /* Match other pages soft background */
+            background: #f8fafc;
+            color: #1e293b;
+            font-family: 'Segoe UI', sans-serif;
+        }
         .request-card {
-            background: rgba(255, 255, 255, 0.05);
-            border-left: 5px solid #ffc107;
+            /* Clean white card with shadow */
+            background: #ffffff;
+            border-left: 5px solid #f59e0b; /* Amber/Yellow border for requests */
             border-radius: 12px;
             padding: 20px;
             margin-bottom: 20px;
             transition: 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border-top: 1px solid #f1f5f9;
+            border-right: 1px solid #f1f5f9;
+            border-bottom: 1px solid #f1f5f9;
         }
-        .request-card:hover { background: rgba(255, 255, 255, 0.08); }
-        .detail-label { color: #94a3b8; font-size: 0.85rem; text-transform: uppercase; }
-        .detail-value { font-weight: 600; color: #f8fafc; }
+        .request-card:hover {
+            background: #ffffff;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.08);
+        }
+        .detail-label {
+            /* Muted slate for labels */
+            color: #64748b;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .detail-value {
+            /* Dark slate for high readability */
+            font-weight: 600;
+            color: #0f172a;
+        }
         .alert-custom {
+            /* Professional green for success messages */
             background: #10b981;
             color: white;
             border: none;
             border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
         }
+    </style>
     </style>
 </head>
 <body>

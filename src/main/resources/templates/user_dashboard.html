@@ -9,51 +9,61 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <style>
         body {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            /* Soft light gradient background */
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
             min-height: 100vh;
             font-family: 'Segoe UI', sans-serif;
-            color: white;
+            color: #1e293b; /* Dark slate text */
         }
-        .navbar { background-color: #0f172a !important; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .navbar {
+            background-color: #ffffff !important;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
         .hero-section { padding: 30px 15px; text-align: center; }
 
-        /* Alert Box Optimization */
+        /* Alert Box Optimization - Security warnings should still pop */
         .security-alert-box {
-            background: rgba(220, 53, 69, 0.1);
-            border: 1px solid rgba(220, 53, 69, 0.3);
+            background: #fef2f2;
+            border: 1px solid #fecaca;
             border-left: 5px solid #dc3545;
             border-radius: 15px;
             padding: 15px;
             margin-bottom: 25px;
+            color: #991b1b;
         }
 
-        /* Nav Card - Mobile Specific */
+        /* Nav Card - Clean Light Theme */
         .nav-card {
-            background: rgba(255, 255, 255, 0.05);
+            background: #ffffff;
             border-radius: 20px;
             padding: 30px 15px;
             text-align: center;
             transition: all 0.3s ease;
             cursor: pointer;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid #e2e8f0;
             height: 100%;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
             text-decoration: none !important;
             display: block;
-            color: white;
+            color: #1e293b;
         }
         .nav-card:hover {
             transform: translateY(-5px);
-            background: rgba(255, 255, 255, 0.1);
+            background: #ffffff;
             border-color: #38bdf8;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
         .nav-card i { font-size: 2.5rem; margin-bottom: 15px; display: block; }
-        .icon-encrypt { color: #38bdf8; }
-        .icon-decrypt { color: #818cf8; }
-        .icon-share { color: #fbbf24; }
-        .icon-history { color: #34d399; }
 
-        .welcome-text { color: #38bdf8; font-weight: 800; font-size: 1.8rem; }
+        /* Vibrant icons for light theme */
+        .icon-encrypt { color: #0284c7; }
+        .icon-decrypt { color: #4f46e5; }
+        .icon-share { color: #d97706; }
+        .icon-history { color: #059669; }
+
+        .welcome-text { color: #0284c7; font-weight: 800; font-size: 1.8rem; }
+        .navbar-brand { color: #0f172a !important; font-weight: 700; }
 
         /* Small screen adjustments */
         @media (max-width: 576px) {
@@ -67,12 +77,14 @@
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-dark shadow">
+<nav class="navbar navbar-expand-lg navbar-light shadow-sm">
     <div class="container">
-        <a class="navbar-brand fw-bold" href="#"><i class="fas fa-dharmachakra me-2"></i>CHAKRA AI</a>
+        <a class="navbar-brand fw-bold" href="#"><i class="fas fa-dharmachakra me-2 text-info"></i>CHAKRA AI</a>
         <div class="d-flex align-items-center">
-            <span class="me-2 d-none d-sm-inline small"><i class="fas fa-circle text-success me-1"></i> Active</span>
-            <a th:href="@{/logout}" class="btn btn-outline-light btn-sm">Logout</a>
+            <span class="me-3 d-none d-sm-inline small text-dark fw-semibold"><i class="fas fa-circle text-success me-1"></i> Active</span>
+            <a th:href="@{/logout}" class="btn btn-outline-danger btn-sm fw-bold px-3" style="border-radius: 10px;">
+                <i class="fas fa-sign-out-alt me-1"></i> Logout
+            </a>
         </div>
     </div>
 </nav>
@@ -106,25 +118,25 @@
         <div class="col-12 col-md-6 col-lg-3">
             <a th:href="@{/api/chakra/encrypt-page}" class="nav-card">
                 <i class="fas fa-shield-halved icon-encrypt"></i>
-                <h6 class="mb-0">Encrypt</h6>
+                <h6 class="mb-0 fw-bold">Encrypt</h6>
             </a>
         </div>
         <div class="col-12 col-md-6 col-lg-3">
             <a th:href="@{/api/chakra/decrypt-hub}" class="nav-card">
                 <i class="fas fa-unlock-keyhole icon-decrypt"></i>
-                <h6 class="mb-0">Decrypt</h6>
+                <h6 class="mb-0 fw-bold">Decrypt</h6>
             </a>
         </div>
         <div class="col-12 col-md-6 col-lg-3">
             <a th:href="@{/api/chakra/share-management}" class="nav-card">
                 <i class="fas fa-share-nodes icon-share"></i>
-                <h6 class="mb-0">Share</h6>
+                <h6 class="mb-0 fw-bold">Share</h6>
             </a>
         </div>
         <div class="col-12 col-md-6 col-lg-3">
             <a th:href="@{/api/chakra/history}" class="nav-card">
                 <i class="fas fa-database icon-history"></i>
-                <h6 class="mb-0">Vault</h6>
+                <h6 class="mb-0 fw-bold">Vault</h6>
             </a>
         </div>
     </div>

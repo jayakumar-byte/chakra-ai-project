@@ -8,34 +8,39 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
         body {
-            background: #0f172a;
+            /* Soft light background for consistency */
+            background: #f8fafc;
             min-height: 100vh;
             font-family: 'Segoe UI', sans-serif;
-            color: white;
+            color: #1e293b; /* Dark slate text */
             padding-bottom: 50px;
         }
 
         .navbar {
-            background-color: rgba(15, 23, 42, 0.9) !important;
+            /* White navbar with subtle blur */
+            background-color: rgba(255, 255, 255, 0.9) !important;
             backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
         }
 
         .vault-card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            /* Clean white card with shadow */
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
             border-radius: 18px;
             padding: 20px;
             transition: all 0.3s ease;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
         .vault-card:hover {
             transform: translateY(-5px);
             border-color: #38bdf8;
-            background: rgba(255, 255, 255, 0.08);
+            background: #ffffff;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
         }
 
-        .file-icon { font-size: 2rem; color: #38bdf8; }
+        .file-icon { font-size: 2rem; color: #0284c7; }
 
         .btn-action {
             border-radius: 12px;
@@ -45,12 +50,13 @@
             transition: 0.3s;
         }
 
-        /* Text Truncate Logic for long filenames on small screens */
+        /* Text Truncate Logic */
         .file-info h6 {
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            max-width: 180px; /* Adjusted for mobile */
+            max-width: 180px;
+            color: #0f172a;
         }
 
         @media (min-width: 768px) {
@@ -60,6 +66,7 @@
         .empty-state {
             padding: 100px 20px;
             text-align: center;
+            color: #64748b;
         }
 
         /* Mobile Adjustments */
@@ -68,14 +75,15 @@
             h2 { font-size: 1.5rem; }
             .vault-card { padding: 15px; }
         }
+
     </style>
 </head>
 <body>
 
-<nav class="navbar navbar-dark sticky-top mb-4">
+<nav class="navbar navbar-light sticky-top mb-4">
     <div class="container">
-        <a class="navbar-brand small fw-bold" th:href="@{/api/chakra/dashboard}">
-            <i class="fas fa-arrow-left me-2"></i> Dashboard
+        <a class="navbar-brand small fw-bold text-dark" th:href="@{/api/chakra/dashboard}">
+            <i class="fas fa-arrow-left me-2 text-info"></i> Dashboard
         </a>
     </div>
 </nav>
@@ -91,7 +99,7 @@
 
     <div th:if="${param.message}" class="alert alert-success bg-success bg-opacity-10 border-0 text-success alert-dismissible fade show" role="alert">
         <i class="fas fa-check-circle me-2"></i> <span th:text="${param.message}"></span>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
     <div th:if="${error}" class="alert alert-danger bg-danger bg-opacity-10 border-0 text-danger" th:text="${error}"></div>
 
@@ -99,11 +107,11 @@
         <div class="col-12 col-md-6 col-lg-4" th:each="file : ${files}">
             <div class="vault-card">
                 <div class="d-flex align-items-center mb-4">
-                    <div class="bg-dark rounded-3 p-3 me-3">
+                    <div class="bg-light rounded-3 p-3 me-3 border">
                         <i class="fas fa-file-shield file-icon"></i>
                     </div>
                     <div class="file-info overflow-hidden">
-                        <h6 class="mb-0 text-white fw-bold" th:text="${file.originalFileName}">filename.png</h6>
+                        <h6 class="mb-0 text-dark fw-bold" th:text="${file.originalFileName}">filename.png</h6>
                         <small class="text-muted" th:text="${file.fileType}">image/png</small>
                     </div>
                 </div>
@@ -130,10 +138,10 @@
         </div>
 
         <div class="col-12 empty-state" th:if="${#lists.isEmpty(files)}">
-            <div class="bg-dark rounded-circle d-inline-flex align-items-center justify-content-center mb-4" style="width: 100px; height: 100px;">
+            <div class="bg-light border rounded-circle d-inline-flex align-items-center justify-content-center mb-4" style="width: 100px; height: 100px;">
                 <i class="fas fa-folder-open fa-3x text-muted"></i>
             </div>
-            <h5 class="text-white">Your vault is empty, macha!</h5>
+            <h5 class="text-dark fw-bold">Your vault is empty, macha!</h5>
             <p class="text-muted small">You haven't encrypted any files yet. Let's secure something!</p>
             <a th:href="@{/api/chakra/encrypt-page}" class="btn btn-info mt-2 px-4 py-2 fw-bold text-dark">
                 <i class="fas fa-plus me-2"></i> Encrypt First File

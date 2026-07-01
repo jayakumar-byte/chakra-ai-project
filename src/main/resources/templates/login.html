@@ -7,57 +7,63 @@
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #0f172a;
+            /* Soft light background to match other pages */
+            background: #f8fafc;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0;
-            padding: 20px; /* Mobile-la edge-la ottama irukka */
+            padding: 20px;
             box-sizing: border-box;
         }
         .login-container {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 30px; /* Padding konjam kuraichuruken for mobile */
+            /* Clean white card with soft shadow */
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
             border-radius: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-            width: 100%; /* Full width edukkum */
-            max-width: 380px; /* Aana 380px mela pogaadhu */
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            width: 100%;
+            max-width: 380px;
             text-align: center;
-            color: white;
-            backdrop-filter: blur(10px); /* Oru glassy look kudukkum */
+            color: #1e293b; /* Dark slate text */
+            backdrop-filter: blur(10px);
         }
         h2 {
-            color: #38bdf8;
+            /* Professional blue for the title */
+            color: #0284c7;
             margin-bottom: 25px;
             font-weight: bold;
             font-size: 24px;
         }
         input {
             width: 100%;
-            padding: 14px; /* Mobile touch-ku easy-aa irukka increase panniruken */
+            padding: 14px;
             margin: 12px 0;
-            border: 1px solid rgba(255,255,255,0.2);
+            /* Light border for inputs */
+            border: 1px solid #cbd5e1;
             border-radius: 8px;
             box-sizing: border-box;
-            background: rgba(0,0,0,0.3);
-            color: white;
-            font-size: 16px; /* Mobile-la auto-zoom avoid panna 16px best */
+            background: #ffffff;
+            color: #1e293b;
+            font-size: 16px;
             outline: none;
             transition: 0.3s;
         }
         input:focus {
-            border-color: #38bdf8;
-            background: rgba(0,0,0,0.4);
+            border-color: #0ea5e9;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
         }
-        input::placeholder { color: rgba(255,255,255,0.4); }
+        input::placeholder { color: #94a3b8; }
 
         button {
             width: 100%;
             padding: 14px;
-            background: #38bdf8;
-            color: #0f172a;
+            /* Solid blue button */
+            background: #0ea5e9;
+            color: #ffffff;
             border: none;
             border-radius: 8px;
             cursor: pointer;
@@ -65,10 +71,12 @@
             font-weight: bold;
             transition: 0.3s;
             margin-top: 10px;
+            box-shadow: 0 4px 6px rgba(14, 165, 233, 0.2);
         }
         button:hover {
-            background: #0ea5e9;
+            background: #0284c7;
             transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(14, 165, 233, 0.3);
         }
         button:active {
             transform: translateY(0);
@@ -83,25 +91,26 @@
             text-align: left;
         }
         .error-msg {
-            background: rgba(239, 68, 68, 0.15);
-            color: #f87171;
-            border: 1px solid rgba(239, 68, 68, 0.3);
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
         }
         .success-msg {
-            background: rgba(34, 197, 94, 0.15);
-            color: #4ade80;
-            border: 1px solid rgba(34, 197, 94, 0.3);
+            background: #f0fdf4;
+            color: #16a34a;
+            border: 1px solid #bbf7d0;
         }
 
         a {
             display: inline-block;
             margin-top: 20px;
-            color: #38bdf8;
+            color: #0ea5e9;
             text-decoration: none;
             font-size: 14px;
             transition: 0.3s;
+            font-weight: 500;
         }
-        a:hover { opacity: 0.8; }
+        a:hover { color: #0284c7; text-decoration: underline; }
 
         /* Tablet/Mobile optimization */
         @media (max-width: 480px) {
