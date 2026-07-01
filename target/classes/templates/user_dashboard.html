@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chakra AI - Navigation Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        body {
+            /* Soft light gradient background */
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', sans-serif;
+            color: #1e293b; /* Dark slate text */
+        }
+        .navbar {
+            background-color: #ffffff !important;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .hero-section { padding: 30px 15px; text-align: center; }
+
+        /* Alert Box Optimization - Security warnings should still pop */
+        .security-alert-box {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-left: 5px solid #dc3545;
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 25px;
+            color: #991b1b;
+        }
+
+        /* Nav Card - Clean Light Theme */
+        .nav-card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 30px 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid #e2e8f0;
+            height: 100%;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            text-decoration: none !important;
+            display: block;
+            color: #1e293b;
+        }
+        .nav-card:hover {
+            transform: translateY(-5px);
+            background: #ffffff;
+            border-color: #38bdf8;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .nav-card i { font-size: 2.5rem; margin-bottom: 15px; display: block; }
+
+        /* Vibrant icons for light theme */
+        .icon-encrypt { color: #0284c7; }
+        .icon-decrypt { color: #4f46e5; }
+        .icon-share { color: #d97706; }
+        .icon-history { color: #059669; }
+
+        .welcome-text { color: #0284c7; font-weight: 800; font-size: 1.8rem; }
+        .navbar-brand { color: #0f172a !important; font-weight: 700; }
+
+        /* Small screen adjustments */
+        @media (max-width: 576px) {
+            .navbar-brand { font-size: 0.9rem; }
+            .welcome-text { font-size: 1.5rem; }
+            .nav-card { padding: 20px; }
+            .nav-card i { font-size: 2rem; }
+            .btn-sm { font-size: 0.75rem; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light shadow-sm">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="#"><i class="fas fa-dharmachakra me-2 text-info"></i>CHAKRA AI</a>
+        <div class="d-flex align-items-center">
+            <span class="me-3 d-none d-sm-inline small text-dark fw-semibold"><i class="fas fa-circle text-success me-1"></i> Active</span>
+            <a th:href="@{/logout}" class="btn btn-outline-danger btn-sm fw-bold px-3" style="border-radius: 10px;">
+                <i class="fas fa-sign-out-alt me-1"></i> Logout
+            </a>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="hero-section">
+        <h1 class="welcome-text">Hi, <span th:text="${#authentication.name}">User</span>!</h1>
+        <p class="text-secondary small">Your secure data vault is under monitoring.</p>
+    </div>
+
+    <div th:if="${not #lists.isEmpty(anomalies)}" class="security-alert-box animate__animated animate__headShake">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h6 class="text-danger fw-bold mb-0 small"><i class="fas fa-shield-virus me-2"></i> SECURITY ALERTS</h6>
+            <span class="badge bg-danger rounded-pill" th:text="${#lists.size(anomalies)}">0</span>
+        </div>
+
+        <div th:each="alert : ${anomalies}" th:if="${alert.redAlert}" class="bg-dark p-3 mb-2 rounded border-start border-danger border-4">
+            <div class="d-flex justify-content-between align-items-start">
+                <div class="flex-grow-1">
+                    <p class="mb-1 text-white fw-bold small" th:text="${alert.filename}">file.png</p>
+                    <span class="text-muted" style="font-size: 0.7rem;" th:text="${#temporals.format(alert.timestamp, 'HH:mm | dd MMM')}">Time</span>
+                </div>
+                <button type="button" class="btn btn-outline-danger btn-sm px-2 py-1" style="font-size: 0.7rem;" th:onclick="'fetchAttemptDetails(' + ${alert.id} + ')'">
+                    DETAILS
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-5">
+        <div class="col-12 col-md-6 col-lg-3">
+            <a th:href="@{/api/chakra/encrypt-page}" class="nav-card">
+                <i class="fas fa-shield-halved icon-encrypt"></i>
+                <h6 class="mb-0 fw-bold">Encrypt</h6>
+            </a>
+        </div>
+        <div class="col-12 col-md-6 col-lg-3">
+            <a th:href="@{/api/chakra/decrypt-hub}" class="nav-card">
+                <i class="fas fa-unlock-keyhole icon-decrypt"></i>
+                <h6 class="mb-0 fw-bold">Decrypt</h6>
+            </a>
+        </div>
+        <div class="col-12 col-md-6 col-lg-3">
+            <a th:href="@{/api/chakra/share-management}" class="nav-card">
+                <i class="fas fa-share-nodes icon-share"></i>
+                <h6 class="mb-0 fw-bold">Share</h6>
+            </a>
+        </div>
+        <div class="col-12 col-md-6 col-lg-3">
+            <a th:href="@{/api/chakra/history}" class="nav-card">
+                <i class="fas fa-database icon-history"></i>
+                <h6 class="mb-0 fw-bold">Vault</h6>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="sharedDetailModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered mx-3 mx-sm-auto">
+        <div class="modal-content bg-dark text-white border-secondary shadow">
+            <div class="modal-header border-secondary">
+                <h6 class="modal-title"><i class="fas fa-user-secret me-2"></i> Threat Analysis</h6>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4 text-center">
+                <i class="fas fa-user-ninja fa-3x text-danger mb-3"></i>
+                <ul class="list-group list-group-flush text-start bg-transparent">
+                    <li class="list-group-item bg-transparent text-white border-secondary small"><strong>Suspect:</strong> <span id="m-email" class="text-danger">...</span></li>
+                    <li class="list-group-item bg-transparent text-white border-secondary small"><strong>File:</strong> <span id="m-file">...</span></li>
+                </ul>
+            </div>
+            <div class="modal-footer border-secondary bg-dark" id="modal-footer-action"></div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function fetchAttemptDetails(id) {
+        document.getElementById('m-email').innerText = "Analyzing...";
+        const modalObj = new bootstrap.Modal(document.getElementById('sharedDetailModal'));
+        modalObj.show();
+        fetch('/api/chakra/view-attempt/' + id)
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('m-email').innerText = data.suspectEmail;
+                document.getElementById('m-file').innerText = data.fileName;
+                const footer = document.getElementById('modal-footer-action');
+                if(data.reported) {
+                    footer.innerHTML = `<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>`;
+                } else {
+                    footer.innerHTML = `<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button><form action="/api/chakra/report-threat/${id}" method="POST" style="display:inline;"><button type="submit" class="btn btn-danger btn-sm">Report</button></form>`;
+                }
+            });
+    }
+</script>
+</body>
+</html>
