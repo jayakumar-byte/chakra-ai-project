@@ -35,7 +35,7 @@ public class EncryptedFile {
     @JoinColumn(name = "owner_id")
     private User owner;
 
-    // ⭐ FIX: Changed HashSet to Set interface to avoid Hibernate PersistentSet mismatch [cite: 2026-01-16]
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "file_permissions",
@@ -53,7 +53,6 @@ public class EncryptedFile {
         this.createdAt = LocalDateTime.now();
     }
 
-    // --- HELPER METHODS FOR SERVICE COMPATIBILITY --- [cite: 2026-01-04]
 
     public String getFileName() {
         return originalFileName;
@@ -107,7 +106,7 @@ public class EncryptedFile {
     public User getOwner() { return owner; }
     public void setOwner(User owner) { this.owner = owner; }
 
-    // ⭐ FIX: Updated Getter/Setter to use Set interface
+
     public Set<User> getAllowedUsers() {
         return allowedUsers;
     }

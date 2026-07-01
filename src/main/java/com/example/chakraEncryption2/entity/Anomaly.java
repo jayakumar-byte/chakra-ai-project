@@ -10,7 +10,7 @@ public class Anomaly {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // ⭐ IDHU THAAN MISSING: Database columns-ah Java fields-kooda map pannudhu
+
     @Column(name = "attempted_by")
     private String attemptedBy; // [cite: 2026-01-16]
 
@@ -24,9 +24,9 @@ public class Anomaly {
     private boolean reported;
 
     private String filename;
-    // Anomaly.java-la
-    private boolean redAlert;    // true-na Unauthorized Person
-    private boolean yellowAlert; // true-na Wrong Key
+
+    private boolean redAlert;    // true means Unauthorized Person
+    private boolean yellowAlert; // true means Wrong Key
     private LocalDateTime timestamp;
 
     // Anomaly.java
@@ -34,7 +34,7 @@ public class Anomaly {
 
     public Anomaly() {}
 
-    // --- GETTERS AND SETTERS ---
+
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }

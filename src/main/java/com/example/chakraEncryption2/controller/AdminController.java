@@ -47,7 +47,7 @@ public class AdminController {
         return "admin_dashboard";
     }
 
-    // 🚫 2. TOGGLE BLOCK (Same logic)
+    //  2. TOGGLE BLOCK (Same logic)
     @PostMapping("/user/toggle-block/{id}")
     public String toggleUserBlock(@PathVariable Long id, RedirectAttributes ra) {
         User user = userRepo.findById(id).orElseThrow();
@@ -58,7 +58,7 @@ public class AdminController {
         return "redirect:/api/chakra/admin/dashboard";
     }
 
-    // 📩 3. USER REQUESTS (Filter applied: vanish logic inga thaan work aagum)
+    //  3. USER REQUESTS (Filter applied: vanish logic inga thaan work aagum)
     @GetMapping("/requests")
     public String viewReports(Model model) {
         // Repository-la namma create panna puthu method-ah use panrom
@@ -67,7 +67,7 @@ public class AdminController {
         return "admin_requests";
     }
 
-    // 🛑 4. BLOCK BY EMAIL (Same logic)
+    //  4. BLOCK BY EMAIL (Same logic)
     @PostMapping("/user/block-by-email")
     public String blockUserByEmail(@RequestParam("email") String email, RedirectAttributes ra) {
         User user = userRepo.findByEmail(email).orElse(null);
@@ -81,7 +81,7 @@ public class AdminController {
         return "redirect:/api/chakra/admin/requests";
     }
 
-    // ✅ 5. DISMISS REPORT (Soft Dismiss - Vanish from requests ONLY)
+    //  5. DISMISS REPORT (Soft Dismiss - Vanish from requests ONLY)
     @PostMapping("/request/dismiss/{id}")
     public String dismissReport(@PathVariable Long id, RedirectAttributes ra) {
         // deleteById-ku badhula ippo update panrom

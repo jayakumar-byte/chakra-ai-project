@@ -12,7 +12,7 @@ import java.util.Optional;
 @Repository
 public interface PermissionRepository extends JpaRepository<FilePermission, Long> {
 
-    // ⭐ Controller-la call panna indha methods venum
+    //  Controller-la call panna indha methods venum
     List<FilePermission> findAllByFile(EncryptedFile file);
 
     List<FilePermission> findAllByAllowedUser(User allowedUser);

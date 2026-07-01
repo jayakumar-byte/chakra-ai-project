@@ -26,10 +26,7 @@ public class ChakraCoreService {
 
     private static final java.util.Set<String> activeLocks = ConcurrentHashMap.newKeySet();
 
-    /**
-     * ⭐ NEW: Input Validation Constraints Check Layer
-     * Conditions: radius <= 15 (and > 0), theta > 1 and <= 360
-     */
+
     public boolean validateGeometricParameters(double radius, int theta) {
         if (radius <= 0 || radius > 15.0) {
             return false;
@@ -92,7 +89,7 @@ public class ChakraCoreService {
         int totalCapacity = xl * yl;
         byte[] paddedGrid = new byte[totalCapacity];
 
-        // 🚨 STORE EXACT ORIGINAL SIZE IN FIRST 4 BYTES
+        //STORE EXACT ORIGINAL SIZE IN FIRST 4 BYTES
         paddedGrid[0] = (byte) (data.length >> 24);
         paddedGrid[1] = (byte) (data.length >> 16);
         paddedGrid[2] = (byte) (data.length >> 8);
@@ -160,7 +157,7 @@ public class ChakraCoreService {
             paddedGrid[originalIdx] = (byte) (encryptedData[i] - (int)(r * cellR));
         }
 
-        // 🚨 RECOVER THE EXACT ORIGINAL FILE SIZE
+        //  RECOVER THE EXACT ORIGINAL FILE SIZE
         int originalLength = ((paddedGrid[0] & 0xFF) << 24) |
                 ((paddedGrid[1] & 0xFF) << 16) |
                 ((paddedGrid[2] & 0xFF) << 8) |
@@ -183,7 +180,7 @@ public class ChakraCoreService {
         Anomaly a = anomalyRepo.findById(anomalyId).orElseThrow();
         a.setReported(true);
         anomalyRepo.save(a);
-        sendEmail(a.getOwnerEmail(), "✅ Threat Reported", "Report filed for: " + a.getFilename());
+        sendEmail(a.getOwnerEmail(), " Threat Reported", "Report filed for: " + a.getFilename());
     }
 
     public synchronized void logAnomaly(EncryptedFile file, User suspect, String attemptType) {
@@ -205,7 +202,7 @@ public class ChakraCoreService {
     }
 
     private void sendSecurityAlert(String owner, String suspect, String file) {
-        sendEmail(owner, "🚨 Security Alert", suspect + " tried to access your file: " + file);
+        sendEmail(owner, " Security Alert", suspect + " tried to access your file: " + file);
     }
 
     private void sendEmail(String to, String subject, String body) {

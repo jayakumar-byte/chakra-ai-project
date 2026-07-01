@@ -26,7 +26,7 @@ public class AnomalyController {
             // 2. Triggers Email & Other logic in service
             chakraService.processReport(anomalyId);
 
-            ra.addFlashAttribute("message", "✅ Threat reported! Admin has been notified.");
+            ra.addFlashAttribute("message", " Threat reported! Admin has been notified.");
         } catch (Exception e) {
             ra.addFlashAttribute("error", "Reporting failed: " + e.getMessage());
         }

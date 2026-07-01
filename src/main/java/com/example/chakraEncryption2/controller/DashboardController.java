@@ -23,7 +23,7 @@ public class DashboardController {
         // Current logged-in user details
         User currentUser = userRepo.findByEmail(auth.getName()).orElseThrow();
 
-        // ⭐ Filtered Alerts: Owner-ku verum Unauthorized (Red Alert) events
+        //  Filtered Alerts: Owner-ku verum Unauthorized (Red Alert) events
         // Adhuvum innum report pannaadha (Reported = False) events mattum dhaan pogum
         List<Anomaly> ownerOnlyAlerts = anomalyRepo
                 .findByOwnerIdAndRedAlertTrueAndReportedFalseOrderByTimestampDesc(currentUser.getId());

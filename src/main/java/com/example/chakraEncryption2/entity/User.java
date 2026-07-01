@@ -24,7 +24,7 @@ public class User {
     private boolean isBlocked = false; // Admin-led hard block [cite: 2026-01-04]
 
 
-    // 🕒 Security & Lockout Fields
+    // Security & Lockout Fields
     private int failedAttempts = 0; // Tracks consecutive wrong keys [cite: 2026-01-04]
     private LocalDateTime decryptDisabledUntil; // Decryption lock timer [cite: 2026-01-04]
 

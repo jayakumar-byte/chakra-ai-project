@@ -53,7 +53,7 @@ public class UserService {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setTo(to);
-            message.setSubject("Welcome to Chakra Encryption! 🛡️");
+            message.setSubject("Welcome to Chakra Encryption!");
             message.setText("Hi " + name + ",\n\n" +
                     "Your account has been successfully created. Your files are now protected with Chakra logic.\n" +
                     "Stay Secure,\nChakra Team");

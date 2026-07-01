@@ -47,17 +47,13 @@ public class EncryptionController {
 
         model.addAttribute("encryptionSuccess", false);
 
-        // ---------------------------------------------------------------------
-        // ⭐ LAYER 1: File Constraints via AIService (Image < 2MB, Text < 5MB)
-        // ---------------------------------------------------------------------
+
         if (!aiService.validateFileMetadata(file)) {
             model.addAttribute("error", "File size validation failed, macha! Images must be < 2MB and Text files < 5MB.");
             return "encrypt_page"; // Re-renders view instantly for another chance
         }
 
-        // ---------------------------------------------------------------------
-        // ⭐ LAYER 2: Credentials Validation via ChakraCoreService (1-15, 0-360)
-        // ---------------------------------------------------------------------
+
         if (!chakraService.validateGeometricParameters(r, theta)) {
             model.addAttribute("error", "Invalid Credentials! Radius must be 1-15 and Theta 0-360 degrees.");
             return "encrypt_page"; // Re-renders view instantly for another chance

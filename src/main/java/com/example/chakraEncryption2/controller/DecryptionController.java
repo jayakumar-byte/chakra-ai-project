@@ -44,7 +44,7 @@ public class DecryptionController {
             Optional<EncryptedFile> matchedFile = fileRepo.findByFileHash(uploadHash);
 
             if (matchedFile.isEmpty()) {
-                ra.addFlashAttribute("error", "🚨 File verification failed! Unknown File.");
+                ra.addFlashAttribute("error", " File verification failed! Unknown File.");
                 return "redirect:/api/chakra/decrypt-hub";
             }
 
@@ -56,7 +56,7 @@ public class DecryptionController {
                 // Calling Service Method (This sends the Owner Alert Mail)
                 chakraService.logAnomaly(ef, currentUser, "NO_PERMISSION");
 
-                ra.addFlashAttribute("error", "🚨 ACCESS DENIED: Unauthorized person detected. Owner Notified!");
+                ra.addFlashAttribute("error", " ACCESS DENIED: Unauthorized person detected. Owner Notified!");
                 return "redirect:/api/chakra/decrypt-hub";
             }
 
@@ -79,7 +79,7 @@ public class DecryptionController {
                                          @RequestParam("theta") int theta,
                                          Authentication auth) {
 
-        // ⭐ NEW: Geometric Boundary Validation Guard Check (Radius <= 15, Theta > 1 and <= 360)
+
         if (!chakraService.validateGeometricParameters(r, theta)) {
             return ResponseEntity.badRequest()
                     .body(java.util.Map.of("error", "Invalid Credentials Constraints! Radius must be <= 15 and Theta must be 2 to 360 degrees, macha."));

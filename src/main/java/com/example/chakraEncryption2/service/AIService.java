@@ -10,10 +10,7 @@ public class AIService {
     private static final long MAX_IMAGE_SIZE = 2 * 1024 * 1024; // 2MB
     private static final long MAX_TEXT_SIZE = 5 * 1024 * 1024;  // 5MB
 
-    /**
-     * ⭐ NEW: Validates file metadata based on content type and customized size limits
-     * Image must be < 2MB, Text file must be < 5MB
-     */
+
     public boolean validateFileMetadata(MultipartFile file) {
         if (file == null || file.isEmpty()) {
             return false;
@@ -36,9 +33,7 @@ public class AIService {
         return false;
     }
 
-    /**
-     * EXISTING: Core AEGO Grid Optimization Engine (Kept intact)
-     */
+
     public int[] getOptimizedGrid(MultipartFile file) {
         String contentType = file.getContentType();
         long fileSize = file.getSize();
@@ -67,7 +62,7 @@ public class AIService {
             yl++;
         }
 
-        System.out.println("🤖 AEGO Final Decision: Size=" + fileSize + " Grid=" + xl + "x" + yl);
+        System.out.println(" AEGO Final Decision: Size=" + fileSize + " Grid=" + xl + "x" + yl);
         return new int[]{xl, yl};
     }
 }

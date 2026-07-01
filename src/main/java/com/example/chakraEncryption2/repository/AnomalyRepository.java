@@ -10,25 +10,25 @@ import java.util.List;
 @Repository
 public interface AnomalyRepository extends JpaRepository<Anomaly, Long> {
 
-    // 🔴 RED ALERT: For File Owners
+    //  RED ALERT: For File Owners
     List<Anomaly> findByOwnerIdAndRedAlertTrueAndReportedFalseOrderByTimestampDesc(Long ownerId);
 
-    // 📊 ADMIN STATS
+    //  ADMIN STATS
     long countByRedAlertTrue();
     long countByYellowAlertTrue();
 
-    // 📩 REPORTING: Ippo logic-ah mathiytom!
+    //  REPORTING: Ippo logic-ah mathiytom!
     // Report section-la dismiss pannaadha items-ah mattum fetch panna:
     List<Anomaly> findByReportedTrueAndDismissedInReportFalse();
 
     long countByReportedTrue();
 
-    // 📋 GLOBAL AUDIT: Log eppovumae irukkum (Dismissed records-um sethu kaatum)
+    //  GLOBAL AUDIT: Log eppovumae irukkum (Dismissed records-um sethu kaatum)
     List<Anomaly> findAllByOrderByTimestampDesc();
 
-    // 🔍 OWNER VIEW
+    //  OWNER VIEW
     List<Anomaly> findByOwnerId(Long ownerId);
 
-    // 🛡️ ANTI-SPAM
+    //  ANTI-SPAM
     boolean existsByAttemptedByAndFilenameAndTimestampAfter(String attemptedBy, String filename, LocalDateTime timestamp);
 }
